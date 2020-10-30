@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logo from './logo.png';
 import '../App.css';
 
 function Navbar() {
@@ -11,15 +10,13 @@ function Navbar() {
   return (
     <nav>
       <div className = "navbar-container">
-        <img src={logo} width = '200' height = '200'/>
-        <hr></hr>
         <ul className = {click ? 'nav-menu-active' : 'nav-menu'}>
           <li className = 'nav-item'>
             <Link to='/communities' className = 'nav-links'>
               Communities
             </Link>
           </li>
-          <ul>
+          <ul className = {click ? 'nav-menu-active' : 'nav-menu'}>
             <li className = 'nav-item'/>
               <Link to='/communities/community-news' className = 'nav-links'>
                 Community News
@@ -67,7 +64,7 @@ function Navbar() {
               <Link to='/resources' className = 'nav-links'>
                 Resources
               </Link>
-            <ul>
+            <ul className = {click ? 'nav-menu-active' : 'nav-menu'}>
               <li className = 'nav-item'/>
                   <Link to='/resources/programs' className = 'nav-links'>
                     Programs
@@ -82,8 +79,8 @@ function Navbar() {
                 </Link>
             </ul>
           <li className = 'nav-item'/>
-            <Link to='/calendar' className = 'nav-links'>
-              Calendar
+            <Link to='/events' className = 'nav-links'>
+              Events
             </Link>
           <li className = 'nav-item'/>
             <Link to='/alerts' className = 'nav-links'>

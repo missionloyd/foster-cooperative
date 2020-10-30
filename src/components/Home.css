@@ -1,9 +1,9 @@
-communities{
+home{
     display: flex;
     margin-left: 15px;
 }
 
-h1{
+.home-container{
     color: #03b0b5;
     font-family: "KlinicSlabBold";
 }

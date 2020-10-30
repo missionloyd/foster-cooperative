@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
 //import { Link } from 'react-router-dom';
-import './Communities.css';
+import './Home.css';
 import pic from './icons/pic.jpg';
 
-function Communities() {
+function Home() {
 
   const [click, setClick] = useState(false);
   const handleClick = () => setClick(!click);
 
   return (
-    <communities>
-      <div className = "com-container">
-        <h1>Welcome to the Community Page</h1>
-        <p>(Check out the alerts page)</p>
+    <home>
+      <div className = "home-container">
+        <h1>Welcome to the Home Page</h1>
         <img src = {pic}></img>
       </div>
-    </communities>
+    </home>
   );
 }
 
-export default Communities;
+export default Home;

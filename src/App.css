@@ -1,7 +1,100 @@
-/* .App {
-  text-align: center;
-} */
+.App {
+  margin: 0px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.menu-container{
+  display: flex;
+  /* justify-content: space-between; */
+  border-right: 1px solid #c7c6c6;
+  border-bottom: 1px solid #c7c6c6;
+}
+
+.map {
+  border: 1px solid #c7c6c6;
+  width: 75vw;
+  height: 70vh;
+  display: flex;
+}
 
 nav {
-  display: flex-start;
+  display: flex;
+  background-color: #515fa8;
+  border: 1px solid #c7c6c6;
+  width: 250px;
+  height: 85vh;
+}
+
+.nav-links {
+  color: white;
+  font-size: 14px;
+  font-family: sans-serif;
+  text-decoration: none;
+}
+
+.nav-item{
+  display: flex;
+  margin-bottom: 12px;
+}
+
+header {
+  display: flex;
+  color: rgb(0, 157, 255);
+  background-color: white;
+  font-size: 14px;
+  font-family:sans-serif;
+  font-weight: 5px;
+  border: 1px solid #c7c6c6;
+  justify-content: space-between;
+}
+.header-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-container {
+  border-right: 1px solid #c7c6c6;
+  width: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-container {
+  /* border: 1px solid #c7c6c6; */
+  display: flex;
+  opacity: 50%;
+  margin-left: 20px;
+  align-items: center;
+}
+.icon {
+  padding-right: 6px;
+}
+
+.profile-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  opacity: 80%;
+  margin-right: 15px;
+}
+
+ul{
+  list-style-type: none;
+}
+/* li{
+
+} */
+
+p{
+  color: grey;
+  font-size: 14px;
+  font-family: sans-serif;
+}
+
+@font-face {
+  font-family: KlinicSlabBold;
+  src: url("colors_fonts/KlinicSlabMedium.otf") format("opentype");
 }
