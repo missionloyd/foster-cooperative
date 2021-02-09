@@ -2,12 +2,20 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}*/
+} */
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex; 
+  flex-flow: column;
+}
 
 .menu-container{
   display: flex;
-  border-right: 1px solid #c7c6c6;
-  border-bottom: 1px solid #c7c6c6;
+  /* border-right: 1px solid #c7c6c6;
+  border-bottom: 1px solid #c7c6c6; */
 }
 
 p{

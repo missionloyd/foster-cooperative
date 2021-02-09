@@ -1,9 +1,10 @@
 //import React, { useState } from 'react';
 //import { Link } from 'react-router-dom';
-import logo from '../icons/logo.png';
-import search_icon from '../icons/search_icon.svg';
-import profile from '../icons/empty-profile.webp';
-import Searchbar from '../searchbar-component/Searchbar';
+// import search_icon from '../icons/search_icon.svg';
+// import profile from '../icons/empty-profile.webp';
+// import Searchbar from '../searchbar-component/Searchbar';
+import PrimarySearchAppBar from '../app-bar-component/AppBar';
+
 import './Header.css';
 
 function Header() {
@@ -14,19 +15,8 @@ function Header() {
   return (
     <header>
         <div className = "header-container">
-            <div className = "logo-container">
-                <img src={logo} alt= "" width = '80' height = '80'/>
-            </div>
-              <div className = "search-container">
-                  <div className = "icon">
-                    <img src={search_icon} alt="" classname = "icon" width = '20' height = '20'></img>
-                  </div>
-                  <Searchbar/>
-            </div>
+          <PrimarySearchAppBar/>
         </div>
-        <div className = "profile-container">
-                    <img src={profile} alt="" width = '60' height = '60'/>
-            </div>
     </header>
   );
 }

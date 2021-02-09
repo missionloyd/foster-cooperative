@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import AccountTreeOutlinedIcon from '@material-ui/icons/AccountTreeOutlined';
+import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
+import CommentOutlinedIcon from '@material-ui/icons/CommentOutlined';
+import DateRangeOutlinedIcon from '@material-ui/icons/DateRangeOutlined';
+import NotificationsOutlinedIcon from '@material-ui/icons/NotificationsOutlined';
 import './Navbar.css';
 
 function Navbar() {
@@ -13,6 +18,8 @@ function Navbar() {
         <ul className = {click ? 'nav-menu-active' : 'nav-menu'}>
           <li className = 'nav-item'/>
             <NavLink to='/communities' className = 'nav-links' activeClassName = 'nav-links-active-header'>
+            <AccountTreeOutlinedIcon/>
+            <span class="spacer"></span>
               Communities
             </NavLink>
           <ul>
@@ -39,6 +46,8 @@ function Navbar() {
           </ul>
           <li className = 'nav-item'/>
             <NavLink to='/people' className = 'nav-links' activeClassName = 'nav-links-active-header'>
+              <PeopleAltOutlinedIcon/>
+              <span class="spacer"></span>
               People
             </NavLink>
           <ul>  
@@ -61,6 +70,8 @@ function Navbar() {
           </ul> 
           <li className = 'nav-item'/>
             <NavLink to='/resources' className = 'nav-links' activeClassName = 'nav-links-active-header'>
+              <CommentOutlinedIcon/>
+              <span class="spacer"></span>
               Resources
             </NavLink>
           <ul>
@@ -79,10 +90,14 @@ function Navbar() {
           </ul>
           <li className = 'nav-item'/>
             <NavLink to='/events' className = 'nav-links' activeClassName = 'nav-links-active-header'>
+              <DateRangeOutlinedIcon/>
+              <span class="spacer"></span>
               Events
             </NavLink>
           <li className = 'nav-item'/>
             <NavLink to='/alerts' className = 'nav-links' activeClassName = 'nav-links-active-header'>
+              <NotificationsOutlinedIcon/>
+              <span class="spacer"></span>
               Alerts
             </NavLink>
         </ul>

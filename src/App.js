@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from './components/navbar-component/Navbar';
-import Header from './components/header-component/Header';
+//import Header from './components/header-component/Header';
+import PrimarySearchAppBar from './components/app-bar-component/AppBar';
 import Home from './components/home-component/Home';
 import Communities from './components/communities-component/Communities';
 import NewsExport from './components/news-component/NewsExport';
@@ -12,7 +13,7 @@ import './App.css';
 function App() {
   return (
     <>
-      <Header/>
+      <PrimarySearchAppBar/>
       <div className = 'menu-container'>
         <Router>
           <Navbar/>
