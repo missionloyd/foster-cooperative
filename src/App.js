@@ -1,9 +1,10 @@
 import React from 'react';
-import Navbar from './components/Navbar';
-import Header from './components/Header';
-import Home from './components/Home';
-import Communities from './components/Communities';
-import Alerts from './components/Alerts';
+import Navbar from './components/navbar-component/Navbar';
+import Header from './components/header-component/Header';
+import Home from './components/home-component/Home';
+import Communities from './components/communities-component/Communities';
+import NewsExport from './components/news-component/NewsExport';
+import Alerts from './components/alerts-component/Alerts';
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
@@ -17,7 +18,8 @@ function App() {
           <Navbar/>
           <Switch>
             <Route path = '/' exact component = {Home}/>
-            <Route path = '/communities' exact component={Communities} />
+            <Route path = '/communities' exact component={Communities}/>
+            <Route path = '/communities/community-news' exact component={NewsExport}/>
             <Route path = '/alerts' exact component={Alerts} />
           </Switch>
         </Router>

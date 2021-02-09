@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 //import { Link } from 'react-router-dom';
 import './Searchbar.css';
-import pic from './icons/pic.jpg';
+//import pic from './icons/pic.jpg';
 
 class Searchbar extends Component {
 
     render() {
-        const styleInfo = {
-            //paddingLeft:'20px'
-            margin: '0px'
-        }
         const elementStyle = {
             display: 'flex',
             border: '0',
@@ -34,9 +30,3 @@ class Searchbar extends Component {
 }
 
 export default Searchbar;
-// <div>
-//                 <span>Search for a specific Buoy</span>
-//                 <input type='text' placeholder="Enter Buoy ID" style={elementStyle} onChange={(e) => this.searchSpace(e)} />
-//                 {elements}
-//                 <hr className="hrdash"></hr>
-// </div>

@@ -1,14 +1,10 @@
-import React, { Fragment, Component, createRef, useState } from 'react';
+import React, { Component } from 'react';
 import 'react-leaflet';
 import 'leaflet';
-import '../App.css'
+import './Mapview.css'
 import 'leaflet/dist/leaflet.css';
 import {
     Map,
-    FeatureGroup,
-    LayerGroup,
-    LayersControl,
-    Marker,
     TileLayer,
 } from 'react-leaflet';
 
@@ -21,7 +17,7 @@ class Mapview extends Component {
     render() { 
         const position = this.state.currentLocation;
         const zoomLevel = this.state.zoom;
-        const token = this.state.accessToken;
+        //const token = this.state.accessToken;
 
         return (
         <Map className= 'map'

@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+//import React, { useState } from 'react';
 //import { Link } from 'react-router-dom';
-import Mapview from './Mapview';
+import Mapview from '../map-component/Mapview';
 import './Alerts.css';
 
 
 function Alerts() {
 
-  const [click, setClick] = useState(false);
-  const handleClick = () => setClick(!click);
+  //const [click, setClick] = useState(false);
+  //const handleClick = () => setClick(!click);
 
   return (
     <alerts>
