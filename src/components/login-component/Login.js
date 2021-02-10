@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 //import { Link } from 'react-router-dom';
 import './Login.css';
 
 function Login() {
 
-  const [click, setClick] = useState(false);
-  const handleClick = () => setClick(!click);
+  //const [click, setClick] = useState(false);
+  //const handleClick = () => setClick(!click);
 
   return (
     <login>
