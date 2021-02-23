@@ -1,11 +1,11 @@
 import React from 'react';
-import Navbar from './components/navbar-component/Navbar';
+import Navbar from './components/navigation/navbar-component/Navbar';
 //import Header from './components/header-component/Header';
-import PrimarySearchAppBar from './components/app-bar-component/AppBar';
+import PrimarySearchAppBar from './components/navigation/app-bar-component/AppBar';
 import Home from './components/home-component/Home';
-import Communities from './components/communities-component/Communities';
-import NewsExport from './components/news-component/NewsExport';
-import Alerts from './components/alerts-component/Alerts';
+import Communities from './components/communities/communities-component/Communities';
+import NewsExport from './components/communities/community-news-component/community-news';
+import Alerts from './components/additional/alerts-component/Alerts.js';
 
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';

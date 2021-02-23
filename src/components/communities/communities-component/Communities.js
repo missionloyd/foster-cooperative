@@ -1,7 +1,7 @@
 import React from 'react';
 //import { Link } from 'react-router-dom';
 import './Communities.css';
-import pic from '../icons/pic.jpg';
+import pic from '../../icons/pic.jpg';
 
 function Communities() {
 
