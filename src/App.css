@@ -17,6 +17,11 @@ body {
   /* border-right: 1px solid #c7c6c6;
   border-bottom: 1px solid #c7c6c6; */
 }
+.body-container {
+  display: flex;
+  margin-top: 4rem;
+  /* border: 1px solid #c7c6c6; */
+}
 
 p{
   color: grey;

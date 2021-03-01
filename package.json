@@ -16,6 +16,7 @@
     "express-validator": "^6.9.2",
     "jsonwebtoken": "^8.5.1",
     "leaflet": "^1.7.1",
+    "markdown-to-jsx": "^7.1.1",
     "mongoose": "^5.11.15",
     "mongoose-unique-validator": "^2.0.3",
     "multer": "^1.4.2",
@@ -48,5 +49,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "raw-loader": "^4.0.2"
   }
 }

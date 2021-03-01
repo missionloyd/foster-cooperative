@@ -1,0 +1,31 @@
+nav {
+  display: flex;
+  background-color: #515fa8;
+  border-top: 1px solid #c7c6c6;
+  max-width: 250px;
+  height: 91vh;  
+  min-height: 91vh;
+  overflow-y: scroll;
+}
+
+.nav-links {
+  display: flex;
+  text-decoration:none;
+  font-family:Arial;
+  font-size: 15px;
+  color: white;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.nav-links:hover,
+.nav-links-active-header
+{
+  color:#03b0b5;
+  background-color:#465394;
+}
+
+.nav-links-active {
+  color:#03b0b5;
+}
+
