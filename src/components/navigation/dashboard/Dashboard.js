@@ -11,7 +11,8 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
-//import Link from '@material-ui/core/Link';
+// import Link from '@material-ui/core/Link';
+// import Box from '@material-ui/core/Box';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -224,7 +225,7 @@ export default function Dashboard() {
             </div>
             <InputBase
               placeholder="Search communities, resources, and more..."
-              fullWidth = "true"
+              fullWidth = {true}
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
@@ -277,8 +278,7 @@ export default function Dashboard() {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-          
-          {/* <Box pt={4}>
+          {/* <Box pt={5}>
             <Copyright />
           </Box> */}
         </Container>

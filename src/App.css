@@ -12,13 +12,15 @@ body {
   flex-flow: column;
 }
 
-.menu-container{
+.main-container{
   display: flex;
-  /* border-right: 1px solid #c7c6c6;
-  border-bottom: 1px solid #c7c6c6; */
 }
+
 .body-container {
   display: flex;
+  width: auto;
+  margin-right: 3rem;
+  justify-content: center;
   margin-top: 4rem;
   /* border: 1px solid #c7c6c6; */
 }

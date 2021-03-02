@@ -10,19 +10,17 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
+import { green } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import image from '../../icons/logo.png';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: 500,
-    maxWidth: 500,
-    marginLeft: 20,
-    marginBottom: 20
+    minwidth: 450,
+    maxWidth: 450,
+    marginTop: 20,
   },
   media: {
     height: 0,
@@ -39,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     transform: 'rotate(180deg)',
   },
   avatar: {
-    backgroundColor: red[500],
+    backgroundColor: green[500],
   },
 }));
 
@@ -52,7 +50,7 @@ export default function RecipeReviewCard() {
   };
 
   return (
-    <div className = "post-container">
+    <React.Fragment>
         <Card className={classes.root}>
         <CardHeader
             avatar={
@@ -70,12 +68,14 @@ export default function RecipeReviewCard() {
         />
         <CardMedia
             className={classes.media}
-            image={image}
+            image="https://source.unsplash.com/random"
             title="Paella dish"
         />
         <CardContent>
             <Typography variant="body2" color="textSecondary" component="p">
-            Post Content
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
+            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
+            nisi ut aliquip ex ea commodo consequat.
             </Typography>
         </CardContent>
         <CardActions disableSpacing>
@@ -104,6 +104,6 @@ export default function RecipeReviewCard() {
             </CardContent>
         </Collapse>
         </Card>
-    </div>
+    </React.Fragment>
   );
 }
