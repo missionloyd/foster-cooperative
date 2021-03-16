@@ -59,49 +59,34 @@ const NewPlace = () => {
   };
 
   return (
-    <div className="form-container">
+    <div className="page-container">
       <div className="form-header">
-      <h1>New Post 📩</h1>
+        <h1>New Post 📩</h1>
       </div>
-    <React.Fragment>
-      <ErrorModal error={error} onClear={clearError} />
-      <form className="place-form" onSubmit={placeSubmitHandler}>
-        {isLoading && <LoadingSpinner asOverlay />}
-        <Input
-          id="title"
-          element="input"
-          type="text"
-          label="Title"
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Please enter a valid title."
-          onInput={inputHandler}
-        />
-        <Input
-          id="description"
-          element="textarea"
-          label="Description"
-          validators={[VALIDATOR_MINLENGTH(5)]}
-          errorText="Please enter a valid description (at least 5 characters)."
-          onInput={inputHandler}
-        />
-        <Input
-          id="address"
-          element="input"
-          label="Address"
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Please enter a valid address."
-          onInput={inputHandler}
-        />
-        <ImageUpload
-          id="image"
-          onInput={inputHandler}
-          errorText="Please provide an image."
-        />
-        <Button type="submit" disabled={!formState.isValid}>
-          Save Post
-        </Button>
-      </form>
-    </React.Fragment>
+      <div className="form-container">
+        <React.Fragment>
+          <ErrorModal error={error} onClear={clearError} />
+          <form className="place-form" onSubmit={placeSubmitHandler}>
+            {isLoading && <LoadingSpinner asOverlay />}
+            <Input
+              id="description"
+              element="textarea"
+              label="Post Content"
+              validators={[VALIDATOR_MINLENGTH(5)]}
+              errorText="Please enter a valid description (at least 5 characters)."
+              onInput={inputHandler}
+            />
+            <ImageUpload
+              id="image"
+              onInput={inputHandler}
+              errorText="Please provide an image."
+            />
+            <Button type="submit" disabled={!formState.isValid}>
+              Save Post
+            </Button>
+          </form>
+        </React.Fragment>
+      </div>
     </div>
   );
 };
