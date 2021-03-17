@@ -1,5 +1,5 @@
 export default `
-# Sample blog post
+# Sample post
 
 #### April 1, 2020 by Olivier
 

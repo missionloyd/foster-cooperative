@@ -11,9 +11,11 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
-//import Link from '@material-ui/core/Link';
+// import Link from '@material-ui/core/Link';
+// import Box from '@material-ui/core/Box';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
+import MoreIcon from '@material-ui/icons/MoreVert';
 import MenuItem from '@material-ui/core/MenuItem';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -41,6 +43,9 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+  },
+  grow: {
+    flexGrow: 1,
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -75,7 +80,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'none',
   },
   title: {
-    flexGrow: 1,
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
   },
   drawerPaper: {
     position: 'relative',
@@ -154,14 +162,30 @@ const useStyles = makeStyles((theme) => ({
       width: '38ch',
     },
   },
+  sectionDesktop: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+    },
+  },
+  sectionMobile: {
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+  },
 }));
 
-export default function Dashboard() {
+
+export default function Dashboard(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [open, setOpen] = React.useState(true);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState();
 
   const isMenuOpen = Boolean(anchorEl);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -176,10 +200,24 @@ export default function Dashboard() {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    //handleMobileMenuClose();
+    handleMobileMenuClose();
   };
 
-  //const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const handleMobileMenuOpen = (event) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
+  };
+
+  const handleSearch = (e) => {
+    //props.click(e.value);
+    console.log(e.target.value);
+    //let str = e.target.value;
+  }
+
+  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -194,7 +232,47 @@ export default function Dashboard() {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Sign Out</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Log Out</MenuItem>
+    </Menu>
+  );
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem>
+        <IconButton aria-label="show 4 new mails" color="inherit">
+          <Badge badgeContent={4} color="secondary">
+            <MailIcon />
+          </Badge>
+        </IconButton>
+        <p>Messages</p>
+      </MenuItem>
+      <MenuItem>
+        <IconButton aria-label="show 11 new notifications" color="inherit">
+          <Badge badgeContent={11} color="secondary">
+            <NotificationsIcon />
+          </Badge>
+        </IconButton>
+        <p>Notifications</p>
+      </MenuItem>
+      <MenuItem onClick={handleProfileMenuOpen}>
+        <IconButton
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <AccountCircle />
+        </IconButton>
+        <p>Profile</p>
+      </MenuItem>
     </Menu>
   );
 
@@ -218,21 +296,22 @@ export default function Dashboard() {
           {/* <div className = "logo-container">
               <img src={logo} alt= "" width = '70' height = '70'/>
           </div> */}
+          <div className={classes.grow} />
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
             <InputBase
               placeholder="Search communities, resources, and more..."
-              fullWidth = "true"
+              fullWidth = {true}
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
+              onChange={e=>{handleSearch(e)}}
             />
           </div>
-          <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">
@@ -255,8 +334,21 @@ export default function Dashboard() {
               <AccountCircle />
             </IconButton>
           </div>
+          <div className={classes.sectionMobile}>
+            <IconButton
+              aria-label="show more"
+              aria-controls={mobileMenuId}
+              aria-haspopup="true"
+              onClick={handleMobileMenuOpen}
+              color="inherit"
+            >
+              <MoreIcon />
+            </IconButton>
+          </div>
         </Toolbar>
       </AppBar>
+      {renderMenu}
+      {renderMobileMenu}
       <Drawer
         variant="permanent"
         classes={{
@@ -277,13 +369,11 @@ export default function Dashboard() {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-          
-          {/* <Box pt={4}>
+          {/* <Box pt={5}>
             <Copyright />
           </Box> */}
         </Container>
       </main>
-    {renderMenu}
     </div>
   );
 }

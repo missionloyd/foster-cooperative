@@ -3,10 +3,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
-//import { Link } from 'react-router-dom';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
+import WebIcon from '@material-ui/icons/Web';
+import InstagramIcon from '@material-ui/icons/Instagram';
 
 import MainFeaturedPost from './MainFeaturedPost';
 import FeaturedPost from './FeaturedPost';
@@ -26,9 +27,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const mainFeaturedPost = {
-  title: 'Welcome to Foster Arizona\'s new Platform',
+  title: 'Welcome to Foster Arizona\'s Newest Platform',
   description:
-    "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
+    "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting about our new website.",
   image: 'https://source.unsplash.com/random',
   imgText: 'main image description',
   // linkText: 'Continue reading…',
@@ -42,14 +43,18 @@ const featuredPosts = [
       'This is a wider card with supporting text below as a natural lead-in to additional content.',
     image: 'https://source.unsplash.com/random',
     imageText: 'Image Text',
+    link: "",
+    action: 'Continue reading...'
   },
   {
-    title: 'Post title',
+    title: 'Explore Community News',
     date: 'Nov 11',
     description:
       'This is a wider card with supporting text below as a natural lead-in to additional content.',
     image: 'https://source.unsplash.com/random',
     imageText: 'Image Text',
+    link: "/communities/community-news",
+    action: 'Explore...'
   },
 ];
 
@@ -73,19 +78,20 @@ const sidebar = {
     { title: 'April 1999', url: '#' },
   ],
   social: [
-    { name: 'Facebook', icon: FacebookIcon },
-    { name: 'Twitter', icon: TwitterIcon },
-    { name: 'GitHub', icon: GitHubIcon }
+    { name: 'Facebook', icon: FacebookIcon, link: "https://www.facebook.com/FosterAZ/" },
+    { name: 'Twitter', icon: TwitterIcon, link: "https://twitter.com/fosterarizona" },
+    { name: 'Instagram', icon: InstagramIcon, link: "https://www.instagram.com/fosterarizona/" },
+    { name: 'Foster AZ', icon: WebIcon, link: "https://fosterarizona.org/" },
+    { name: 'GitHub', icon: GitHubIcon, link: "https://github.com/missionloyd/foster-cooperative" }
   ],
 };
-
 export default function Home() {
   const classes = useStyles();
 
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <main>
           <MainFeaturedPost post={mainFeaturedPost} />
           <Grid container spacing={4}>

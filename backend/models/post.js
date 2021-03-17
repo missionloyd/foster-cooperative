@@ -12,7 +12,6 @@ const postSchema = new Schema({
   //add image path ask how
   //for accessibility reasons i think its a good idea to have alt text for every image
   imageAltText: {type: String, required: false, minlength =1, maxlength = 100}
-
 });
 
 userSchema.plugin(uniqueValidator);
