@@ -1,16 +1,15 @@
 .header-container {
     display: flex;
     justify-content: space-between;
-    border: 1px solid #c7c6c6;
     margin-bottom: none;
     margin-top: 1rem;
 }
 
 .main-container{
-    display: flex;
     margin-bottom: none;
 }
 
-.spacer {
-    display: flex;
+.body{
+    flex-direction: column;
+    margin: 0%;
 }

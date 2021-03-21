@@ -18,7 +18,7 @@ export const mainListItems = (
     <NavLink to='/home' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <HomeOutlinedIcon/>
+          <HomeOutlinedIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="Home" />
       </ListItem>
@@ -26,7 +26,7 @@ export const mainListItems = (
     <NavLink to='/communities' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <AccountTreeOutlinedIcon/>
+          <AccountTreeOutlinedIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="Communities" />
       </ListItem>
@@ -34,7 +34,7 @@ export const mainListItems = (
     <NavLink to='/people' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <PeopleAltOutlinedIcon/>
+          <PeopleAltOutlinedIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="People" />
       </ListItem>
@@ -42,7 +42,7 @@ export const mainListItems = (
     <NavLink to='/resources' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <CommentOutlinedIcon/>
+          <CommentOutlinedIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="Resources" />
       </ListItem>
@@ -50,7 +50,7 @@ export const mainListItems = (
     <NavLink to='/events' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <DateRangeOutlinedIcon/>
+          <DateRangeOutlinedIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="Events" />
       </ListItem>
@@ -58,7 +58,7 @@ export const mainListItems = (
     <NavLink to='/alerts' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <NotificationsOutlinedIcon/>
+          <NotificationsOutlinedIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="Alerts" />
       </ListItem>
@@ -72,7 +72,7 @@ export const secondaryListItems = (
     <NavLink to='/communities/community-news' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <LinkIcon/>
+          <LinkIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="Community News" />
       </ListItem>
@@ -80,7 +80,7 @@ export const secondaryListItems = (
     <NavLink to='/communities/new-foster-parents' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <LinkIcon/>
+          <LinkIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="New Foster Parents" />
       </ListItem>
@@ -88,7 +88,7 @@ export const secondaryListItems = (
     <NavLink to='/communities/north-phx-families' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <LinkIcon/>
+          <LinkIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="North PHX Families" />
       </ListItem>
@@ -96,7 +96,7 @@ export const secondaryListItems = (
     <NavLink to='/communities/special-needs-families' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <LinkIcon/>
+          <LinkIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="Special Needs" />
       </ListItem>
@@ -104,7 +104,7 @@ export const secondaryListItems = (
     <NavLink to='/communities/create-private-community' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <LinkIcon/>
+          <LinkIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="Create a Community" />
       </ListItem>
@@ -112,7 +112,7 @@ export const secondaryListItems = (
     <NavLink to='/people/young-kids' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <LinkIcon/>
+          <LinkIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="Young Kids (0-4)" />
       </ListItem>
@@ -120,7 +120,7 @@ export const secondaryListItems = (
     <NavLink to='/people/new-parents' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <LinkIcon/>
+          <LinkIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="New Parents" />
       </ListItem>
@@ -128,7 +128,7 @@ export const secondaryListItems = (
     <NavLink to='/people/looking-for-playdate' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <LinkIcon/>
+          <LinkIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="Playdates" />
       </ListItem>
@@ -136,7 +136,7 @@ export const secondaryListItems = (
     <NavLink to='/resources/programs' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <LinkIcon/>
+          <LinkIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="Programs" />
       </ListItem>
@@ -144,7 +144,7 @@ export const secondaryListItems = (
     <NavLink to='/resources/trainings' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <LinkIcon/>
+          <LinkIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="Trainings" />
       </ListItem>
@@ -152,7 +152,7 @@ export const secondaryListItems = (
     <NavLink to='/resources/contacts' className = 'nav-links' activeClassName = 'nav-links-active-header'>
       <ListItem button>
         <ListItemIcon>
-          <LinkIcon/>
+          <LinkIcon className="icon"/>
         </ListItemIcon>
         <ListItemText primary="Contacts" />
       </ListItem>

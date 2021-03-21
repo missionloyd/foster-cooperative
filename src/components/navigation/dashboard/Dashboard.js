@@ -19,11 +19,13 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import MenuItem from '@material-ui/core/MenuItem';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import SearchIcon from '@material-ui/icons/Search';
 import { mainListItems, secondaryListItems } from './listItems';
 import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
 import MailIcon from '@material-ui/icons/Mail';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+
+import GlobalSearchBar from '../search-bar-component/GlobalSearchBar';
 
 // function Copyright() {
 //   return (
@@ -148,7 +150,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  },
+},
   inputRoot: {
     color: 'inherit',
   },
@@ -177,13 +179,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Dashboard(props) {
+export default function Dashboard() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState();
-
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -211,18 +211,13 @@ export default function Dashboard(props) {
     setMobileMoreAnchorEl(null);
   };
 
-  const handleSearch = (e) => {
-    //props.click(e.value);
-    console.log(e.target.value);
-    //let str = e.target.value;
-  }
-
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
+      getContentAnchorEl={null}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       id={menuId}
       keepMounted
@@ -239,6 +234,7 @@ export default function Dashboard(props) {
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
+      getContentAnchorEl={null}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       id={mobileMenuId}
       keepMounted
@@ -301,16 +297,10 @@ export default function Dashboard(props) {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            <InputBase
-              placeholder="Search communities, resources, and more..."
-              fullWidth = {true}
-              classes={{
+            <GlobalSearchBar classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-              onChange={e=>{handleSearch(e)}}
-            />
+              }}/>
           </div>
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">

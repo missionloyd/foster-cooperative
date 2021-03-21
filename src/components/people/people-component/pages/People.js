@@ -12,30 +12,33 @@ function People() {
 
   return (
     <div className = "main-container">
-      <div className="header-container">
-        <h1>People 👋</h1>
-        <div className="spacer">TEST</div>
+      <div className="body">
+        <div className="header-container">
+          <h1>People 👋</h1>
+        </div>
+        <div className="people-container">
+          <Grid container spacing={4} style={styles}>
+            <Grid item xs={12} sm= {6} md={4}>
+              <Post/>
+            </Grid>
+            <Grid item xs={12} sm= {6} md={4}>
+              <Post/>
+            </Grid>
+            <Grid item xs={12} sm= {6} md={4}>
+              <Post/>
+            </Grid>
+            <Grid item xs={12} sm= {6} md={4}>
+              <Post/>
+            </Grid>
+            <Grid item xs={12} sm= {6} md={4}>
+              <Post/>
+            </Grid>
+            <Grid item xs={12} sm= {6} md={4}>
+              <Post/>
+            </Grid>
+          </Grid>
+        </div>
       </div>
-      <Grid container spacing={4} style={styles}>
-        <Grid item xs={12} sm= {6} md={4}>
-          <Post/>
-        </Grid>
-        <Grid item xs={12} sm= {6} md={4}>
-          <Post/>
-        </Grid>
-        <Grid item xs={12} sm= {6} md={4}>
-          <Post/>
-        </Grid>
-        <Grid item xs={12} sm= {6} md={4}>
-          <Post/>
-        </Grid>
-        <Grid item xs={12} sm= {6} md={4}>
-          <Post/>
-        </Grid>
-        <Grid item xs={12} sm= {6} md={4}>
-          <Post/>
-        </Grid>
-      </Grid>
     </div>
   );
 }
