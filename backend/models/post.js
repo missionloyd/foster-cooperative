@@ -10,6 +10,8 @@ const postSchema = new Schema({
   comment: {type: String, required=true, minlength = 1, maxlength = 1000},
   author: { type: mongoose.Types.ObjectId, required: true, ref: 'user' },
   //add image path ask how
+  imagePath: {type: String, required = false},
+
   //for accessibility reasons i think its a good idea to have alt text for every image
   imageAltText: {type: String, required: false, minlength =1, maxlength = 100}
 });
