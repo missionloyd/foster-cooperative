@@ -11,8 +11,7 @@ import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minwidth: 450,
-    maxWidth: 400,
+    maxWidth: 350,
     marginTop: 20,
   },
   avatar: {
@@ -31,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     paddingTop: 20,
-    paddingBottom: 10
+    paddingBottom: 15
   },
   button: {
     display: 'flex',
@@ -65,8 +64,7 @@ export default function RecipeReviewCard() {
           <div className={classes.bio}>
             <Typography variant="body2" color="textSecondary" component="p">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
-              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-              nisi ut aliquip ex ea commodo consequat.
+              labore et dolore magna aliqua. Ut enim ad minim veniam. Sed do eiusmod tempor.
             </Typography>
           </div>
           <div className={classes.center}>

@@ -12,7 +12,8 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
-import Link from '@material-ui/core/Link';
+//import Link from '@material-ui/core/Link';
+import { NavLink } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -24,17 +25,14 @@ import { mainListItems, secondaryListItems } from './listItems';
 import SearchIcon from '@material-ui/icons/Search';
 import MailIcon from '@material-ui/icons/Mail';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-
 import GlobalSearchBar from './GlobalSearchBar/GlobalSearchBar';
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
         Foster Cooperative
-      </Link>{' '}
-      {new Date().getFullYear()}
+      {" " + new Date().getFullYear()}
       {'.'}
     </Typography>
   );
@@ -80,6 +78,10 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButtonHidden: {
     display: 'none',
+  },
+  appBarLink: {
+    textDecoration:'none', 
+    color: 'black'
   },
   title: {
     display: 'none',
@@ -225,9 +227,15 @@ export default function Dashboard() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Log Out</MenuItem>
+      <NavLink to='/account' className={classes.appBarLink}>
+        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      </NavLink>
+      <NavLink to='/account' className={classes.appBarLink}>
+        <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      </NavLink>
+      <NavLink to='/auth' className={classes.appBarLink}>
+        <MenuItem onClick={handleMenuClose}>Log Out</MenuItem>
+      </NavLink>
     </Menu>
   );
   const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -258,7 +266,8 @@ export default function Dashboard() {
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      
+      <MenuItem>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"

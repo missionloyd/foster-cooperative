@@ -5,6 +5,7 @@ import {
   makeStyles,
   Grid
 } from '@material-ui/core';
+import Pagination from '@material-ui/lab/Pagination';
 import Post from '../components/ProfileCard';
 import Page from '../../../components/Page';
 import './People.css';
@@ -24,7 +25,7 @@ const People = () => {
   return (
     <Page
     className={classes.root}
-    title="Community News"
+    title="People"
   >
     <Box
       display="flex"
@@ -56,6 +57,17 @@ const People = () => {
               <Post/>
             </Grid>
           </Grid>
+          <Box
+          mt={3}
+          display="flex"
+          justifyContent="center"
+        >
+          <Pagination
+            color="primary"
+            count={3}
+            size="large"
+          />
+        </Box>
         </Container>
       </Box>
     </Page>

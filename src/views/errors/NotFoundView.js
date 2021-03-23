@@ -15,10 +15,10 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(3)
   },
   image: {
-    marginTop: 50,
+    marginTop: 25,
     display: 'inline-block',
     maxWidth: '100%',
-    width: 560
+    width: 400
   }
 }));
 
@@ -40,7 +40,7 @@ const NotFoundView = () => {
           <Typography
             align="center"
             color="textPrimary"
-            variant="h1"
+            variant="h2"
           >
             404: The page you are looking for isn’t here
           </Typography>

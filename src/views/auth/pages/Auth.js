@@ -1,19 +1,19 @@
 import React, { useState, useContext } from 'react';
 
-import Card from '../../shared/UIElements/Card';
-import Input from '../../shared/FormElements/Input';
-import Button from '../../shared/FormElements/Button';
-import ErrorModal from '../../shared/UIElements/ErrorModal';
-import LoadingSpinner from '../../shared/UIElements/LoadingSpinner';
-import ImageUpload from '../../shared/FormElements/ImageUpload';
+import Card from '../../../components/shared/UIElements/Card';
+import Input from '../../../components/shared/FormElements/Input';
+import Button from '../../../components/shared/FormElements/Button';
+import ErrorModal from '../../../components/shared/UIElements/ErrorModal';
+import LoadingSpinner from '../../../components/shared/UIElements/LoadingSpinner';
+import ImageUpload from '../../../components/shared/FormElements/ImageUpload';
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE
-} from '../../shared/util/validators';
-import { useForm } from '../../shared/hooks/form-hook';
-import { useHttpClient } from '../../shared/hooks/http-hook';
-import { AuthContext } from '../../shared/context/auth-context';
+} from '../../../components/shared/util/validators';
+import { useForm } from '../../../components/shared/hooks/form-hook';
+import { useHttpClient } from '../../../components/shared/hooks/http-hook';
+import { AuthContext } from '../../../components/shared/context/auth-context';
 import './Auth.css';
 
 const Auth = () => {

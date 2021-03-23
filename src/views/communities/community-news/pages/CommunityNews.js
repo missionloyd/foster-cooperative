@@ -5,6 +5,7 @@ import {
   makeStyles,
   Grid
 } from '@material-ui/core';
+import Pagination from '@material-ui/lab/Pagination';
 import Post from '../components/Post';
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 import ResizableIconButton from '../../../../components/shared/FormElements/ResizableIconButton';
@@ -64,6 +65,17 @@ const News = () => {
               <Post/>
             </Grid>
           </Grid>
+          <Box
+          mt={3}
+          display="flex"
+          justifyContent="center"
+        >
+          <Pagination
+            color="primary"
+            count={3}
+            size="large"
+          />
+        </Box>
         </Container>
       </Box>
     </Page>

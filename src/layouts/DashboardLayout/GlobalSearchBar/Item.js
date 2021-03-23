@@ -4,6 +4,7 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import { ButtonBase } from '@material-ui/core'
+import { NavLink } from 'react-router-dom';
 
 const useStyles = makeStyles({
   card: {
@@ -12,7 +13,11 @@ const useStyles = makeStyles({
   },
   cardAction: {
     textAlign: 'initial'
-  }
+  },
+  appBarLink: {
+    textDecoration:'none', 
+    color: 'black'
+  },
 })
 
 const Item = props => {
@@ -22,30 +27,26 @@ const Item = props => {
     return { __html: html }
   }
 
-  const handleClick = (e) => {
-    e.preventDefault();
-    window.location = '/communities/community-news';
-  }
-
   return (
-    <Card className={classes.card}>
-      <ButtonBase
-        className={classes.cardAction}
-        onClick={e => handleClick(e)}
-      >
-      <CardContent>
-        <Typography
-          variant="h5"
-          gutterBottom
-          dangerouslySetInnerHTML={createMarkup(props.title)}
-        />
-        <Typography color="textSecondary" gutterBottom>
-          Page: {props.user}
-        </Typography>
-        <Typography dangerouslySetInnerHTML={createMarkup(props.body)} />
-      </CardContent>
-      </ButtonBase>
-    </Card>
+    <NavLink to='/communities/community-news' className={classes.appBarLink}>
+      <Card className={classes.card}>
+        <ButtonBase
+          className={classes.cardAction}
+        >
+        <CardContent>
+          <Typography
+            variant="h5"
+            gutterBottom
+            dangerouslySetInnerHTML={createMarkup(props.title)}
+          />
+          <Typography color="textSecondary" gutterBottom>
+            Page: {props.user}
+          </Typography>
+          <Typography dangerouslySetInnerHTML={createMarkup(props.body)} />
+        </CardContent>
+        </ButtonBase>
+      </Card>
+    </NavLink>
   )
 }
 
