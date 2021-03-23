@@ -20,7 +20,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
-import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import MailIcon from '@material-ui/icons/Mail';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -297,10 +296,7 @@ export default function Dashboard() {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            <GlobalSearchBar classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}/>
+            <GlobalSearchBar classes={{root: classes.inputRoot, input: classes.inputInput,}}/>
           </div>
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">

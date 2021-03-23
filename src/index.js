@@ -6,13 +6,13 @@ import App from './App';
 const theme = createMuiTheme({
     palette: {
        primary: {
-          light: '#fff',
-          main: '#515fa8',
-          dark: '#000'
+         light: '#fff',
+         main: '#515fa8',
+         dark: '#000'
        },
        secondary: {
          main: '#f44336',
-       },
+       }
     },
     typography: { 
        useNextVariants: true

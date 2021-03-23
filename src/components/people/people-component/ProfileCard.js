@@ -17,8 +17,8 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     backgroundColor: theme.palette.primary.main,
-    width: 100,
-    height: 100,
+    width: 125,
+    height: 125,
   },
   center: {
     display: 'flex',
@@ -31,7 +31,14 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     paddingTop: 20,
-    paddingBottom: 5
+    paddingBottom: 10
+  },
+  button: {
+    display: 'flex',
+    background: '#03b0b5',
+    width: '7rem',
+    color: 'white',
+    justifyContent: 'center',
   }
 }));
 
@@ -63,7 +70,7 @@ export default function RecipeReviewCard() {
             </Typography>
           </div>
           <div className={classes.center}>
-            <Button>
+            <Button variant="contained" className={classes.button}>
               Connect
             </Button>
           </div>
