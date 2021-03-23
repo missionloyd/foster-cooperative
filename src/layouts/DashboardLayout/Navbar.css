@@ -1,0 +1,24 @@
+.nav-links {
+  display: flex;
+  text-decoration:none;
+  font-size: 15px;
+  color: white;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.icon {
+  color: #fafafa;
+}
+
+.nav-links:hover,
+.nav-links-active-header
+{
+  color:#03b0b5;
+  background-color:#465394;
+}
+
+.nav-links-active {
+  color:#03b0b5;
+}
+
