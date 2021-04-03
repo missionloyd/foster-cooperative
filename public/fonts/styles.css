@@ -1,0 +1,9 @@
+h1 {
+  color: #03b0b5;
+  font-family: "KlinicSlabBold";
+}
+
+@font-face {
+  font-family: KlinicSlabBold;
+  src: url("KlinicSlabMedium.otf");
+}

@@ -1,0 +1,13 @@
+{
+  "/_app": "pages/_app.js",
+  "/_document": "pages/_document.js",
+  "/_error": "pages/_error.js",
+  "/404": "pages/404.js",
+  "/people": "pages/people.js",
+  "/events": "pages/events.js",
+  "/alerts": "pages/alerts.js",
+  "/home": "pages/home.js",
+  "/user/profile": "pages/user/profile.js",
+  "/community-news/feed": "pages/community-news/feed.js",
+  "/auth": "pages/auth.js"
+}

@@ -11,6 +11,9 @@ const HttpError = require('./models/http-error');
 
 const app = express();
 
+export const DB_USERNAME = process.env.MONGO_ATLAS_USERNAME
+export const DB_PASSWORD = process.env.MONGO_ATLAS_PW
+
 app.use(bodyParser.json());
 
 app.use('/uploads/images', express.static(path.join('uploads', 'images')));
@@ -49,7 +52,7 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    `mongodb+srv://user:Hd3KdPTiCljli1Pc@fosteraz.4mh0c.mongodb.net/fosterAZ?retryWrites=true&w=majority`,
+    `mongodb+srv://`+{DB_USERNAME}+`:`+{DB_PASSWORD}+`@fosteraz.4mh0c.mongodb.net/fosterAZ?retryWrites=true&w=majority`,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => {

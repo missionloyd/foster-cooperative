@@ -1,8 +1,0 @@
-{
-  "env": {
-    "MONGO_ATLAS_USERNAME": "user",
-    "MONGO_ATLAS_PW": "Hd3KdPTiCljli1Pc",
-    "JWT_KEY": "secret_development_string",
-    "ROOT": "backend/"
-  }
-}
