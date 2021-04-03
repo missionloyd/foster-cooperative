@@ -1,13 +1,16 @@
 {
+  "/404": "pages/404.js",
   "/_app": "pages/_app.js",
   "/_document": "pages/_document.js",
-  "/_error": "pages/_error.js",
-  "/404": "pages/404.js",
-  "/people": "pages/people.js",
-  "/events": "pages/events.js",
   "/alerts": "pages/alerts.js",
-  "/home": "pages/home.js",
-  "/user/profile": "pages/user/profile.js",
+  "/api/hello": "pages/api/hello.js",
+  "/auth": "pages/auth.js",
   "/community-news/feed": "pages/community-news/feed.js",
-  "/auth": "pages/auth.js"
+  "/events": "pages/events.js",
+  "/home": "pages/home.js",
+  "/": "pages/index.js",
+  "/people": "pages/people.js",
+  "/test": "pages/test.js",
+  "/user/profile": "pages/user/profile.js",
+  "/_error": "pages/_error.js"
 }
