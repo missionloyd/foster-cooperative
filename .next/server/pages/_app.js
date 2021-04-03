@@ -451,7 +451,7 @@ module.exports = require("react/jsx-runtime");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GA_TRACKING_ID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return pageview; });
 /* unused harmony export event */
-const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID; // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
+const GA_TRACKING_ID = "267750527"; // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 
 const pageview = url => {
   window.gtag('config', GA_TRACKING_ID, {
