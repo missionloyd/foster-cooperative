@@ -6,13 +6,13 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
+//import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
-import Link from 'next/link';
+import Link from '../../components/shared/Link';
 import Box from '@material-ui/core/Box';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -25,7 +25,6 @@ import SearchIcon from '@material-ui/icons/Search';
 import MailIcon from '@material-ui/icons/Mail';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import GlobalSearchBar from './GlobalSearchBar/GlobalSearchBar';
-import styled from 'styled-components'
 
 function Copyright() {
   return (
@@ -177,17 +176,8 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
-  },
-  navStyle: {
-    fontSize: '15px',
-    color: 'white',
-    transition: '0.2s',
   }
 }));
-
-const FixLink = styled.a`
-  color: black;
-  `
 
 export default function Dashboard({children}) {
   const classes = useStyles();
@@ -235,32 +225,18 @@ export default function Dashboard({children}) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-        <MenuItem> 
-          <Link
-          href='/user/profile' 
-          onClick={handleMenuClose}
-        >
-          <FixLink>Profile</FixLink>
-          </Link>
-        </MenuItem>
 
-        <MenuItem> 
-          <Link
-          href='/user/account' 
-          onClick={handleMenuClose}
-        >
-          <FixLink>My account</FixLink>
-          </Link>
-        </MenuItem>
+      <Link href='/user/profile' onClick={handleMenuClose} style={{textDecoration: 'none', color: 'black'}}>
+        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      </Link>
 
-        <MenuItem> 
-          <Link
-          href='/auth'
-          onClick={handleMenuClose}
-        >
-          <FixLink>Log Out</FixLink>
-          </Link>
-        </MenuItem>
+      <Link href='/user/account' onClick={handleMenuClose} style={{textDecoration: 'none', color: 'black'}}>
+        <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      </Link>
+
+      <Link href='/auth' onClick={handleMenuClose} style={{textDecoration: 'none', color: 'black'}}>
+        <MenuItem onClick={handleMenuClose}>Log Out</MenuItem>
+      </Link>
 
     </Menu>
   );
@@ -284,6 +260,7 @@ export default function Dashboard({children}) {
         </IconButton>
         <p>Messages</p>
       </MenuItem>
+      
       <MenuItem>
         <IconButton aria-label="show 11 new notifications" color="inherit">
           <Badge badgeContent={11} color="secondary">

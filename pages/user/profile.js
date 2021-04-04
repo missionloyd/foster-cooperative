@@ -4,7 +4,7 @@ import {
   Grid,
   makeStyles
 } from '@material-ui/core';
-import Page from '../../components/Page';
+import Page from '../../components/shared/Page';
 import ProfileView from '../../components/user/profile/ProfileView';
 import ProfileDetails from '../../components/user/profile/ProfileDetails';
 import Dashboard from '../../layouts/DashboardLayout/Dashboard';

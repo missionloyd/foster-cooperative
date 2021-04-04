@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import Post from '../components/people/ProfileCard';
-import Page from '../components/Page';
+import Page from '../components/shared/Page';
 import Dashboard from "../layouts/DashboardLayout/Dashboard";
 
 // import './People.css';

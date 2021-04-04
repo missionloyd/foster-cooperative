@@ -95,10 +95,10 @@ const GlobalSearchBar = (props) => {
   // Return Statement
   return (
       <div>
-      <SearchBar onInput={e => handleInput(e)} classes={props.classes}/>
+      <SearchBar onInput={e => handleInput(e)} classes={props.classes} autoFocus={true}/>
       <Popover
       id={id}
-      open={open} 
+      open={Boolean(anchorEl)} 
       //state.searchData > "0"
       hidden={!(state.search.length > 2)}
       disableAutoFocus

@@ -6,7 +6,7 @@ import {
   Grid
 } from '@material-ui/core';
 import Calendar from '../components/events/Calendar';
-import Page from '../components/Page';
+import Page from '../components/shared/Page';
 import TypesOfEvents from '../components/events/TypesOfEvents';
 import Dashboard from "../layouts/DashboardLayout/Dashboard";
 

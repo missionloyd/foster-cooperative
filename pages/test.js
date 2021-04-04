@@ -1,6 +1,6 @@
 import React from "react";
 import Dashboard from "../layouts/DashboardLayout/Dashboard";
-import Page from "../components/Page";
+import Page from "../components/shared/Page";
 
 function Communities() {
     return(

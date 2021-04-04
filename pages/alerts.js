@@ -1,7 +1,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import Dashboard from "../layouts/DashboardLayout/Dashboard";
-import Page from "../components/Page";
+import Page from "../components/shared/Page";
 
 const Alerts = () => {
     const MapWithNoSSR = dynamic(() => import("../components/alerts/Map"), {

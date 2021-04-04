@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /profile/
+Disallow: /account/
+Disallow: /api
+Disallow: /api/
+
+User-agent: nsa
+Disallow: /

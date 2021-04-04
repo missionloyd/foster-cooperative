@@ -18,7 +18,7 @@ import post1 from '../components/home/demo/blog-post.1.md.js';
 import post2 from '../components/home/demo/blog-post.2.md.js';
 import post3 from '../components/home/demo/blog-post.3.md.js';
 import Dashboard from "../layouts/DashboardLayout/Dashboard";
-import Page from "../components/Page";
+import Page from "../components/shared/Page";
 
 //import './Home.css';
 

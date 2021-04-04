@@ -9,8 +9,9 @@ import Pagination from '@material-ui/lab/Pagination';
 import Post from '../../components/community-news/Post';
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 import ResizableIconButton from '../../components/community-news/ResizableIconButton';
-import Page from '../../components/Page';
+import Page from '../../components/shared/Page';
 import Dashboard from '../../layouts/DashboardLayout/Dashboard';
+import Link from '../../components/shared/Link';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,9 +53,11 @@ const News = () => {
             <h1>Community News 👋</h1>
             <div className={classes.headerContainer}>
               <h1>New Post</h1>
-              <ResizableIconButton size='large' href="/community-news/new-post" >
-                <AddCircleRoundedIcon />
-              </ResizableIconButton>
+              <Link href="/community-news/new-post" passHref>
+                <ResizableIconButton size='large'>
+                  <AddCircleRoundedIcon />
+                </ResizableIconButton>
+              </Link>
             </div>
           </div>
             <Grid container spacing={4} >
