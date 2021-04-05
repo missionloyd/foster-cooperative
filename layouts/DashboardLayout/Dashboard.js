@@ -252,6 +252,7 @@ export default function Dashboard({children}) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+      <Link href='/chat' style={{textDecoration: 'none', color: 'white'}}>
       <MenuItem>
         <IconButton aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="secondary">
@@ -260,7 +261,8 @@ export default function Dashboard({children}) {
         </IconButton>
         <p>Messages</p>
       </MenuItem>
-      
+      </Link>
+
       <MenuItem>
         <IconButton aria-label="show 11 new notifications" color="inherit">
           <Badge badgeContent={11} color="secondary">
@@ -270,17 +272,19 @@ export default function Dashboard({children}) {
         <p>Notifications</p>
       </MenuItem>
       
-      <MenuItem>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
+      <Link href='/user/profile' style={{textDecoration: 'none', color: 'white'}}>
+        <MenuItem>
+          <IconButton
+            aria-label="account of current user"
+            aria-controls="primary-search-account-menu"
+            aria-haspopup="true"
+            color="inherit"
+          >
+            <AccountCircle />
+          </IconButton>
+          <p>Profile</p>
+        </MenuItem>
+      </Link>
     </Menu>
   );
 
@@ -312,11 +316,15 @@ export default function Dashboard({children}) {
             <GlobalSearchBar classes={{root: classes.inputRoot, input: classes.inputInput,}}/>
           </div>
           <div className={classes.sectionDesktop}>
+            
+          <Link href='/chat' style={{textDecoration: 'none', color: 'white'}}>
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <MailIcon />
               </Badge>
             </IconButton>
+          </Link>
+
             <IconButton aria-label="show 17 new notifications" color="inherit">
               <Badge badgeContent={17} color="secondary">
                 <NotificationsIcon />

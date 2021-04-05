@@ -99,7 +99,6 @@ const ProfileDetails = ({ className, ...rest }) => {
                 onChange={inputHandler}
                 required
                 variant="outlined"
-                autoFocus
               />
             </Grid>
             <Grid
