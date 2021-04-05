@@ -252,7 +252,7 @@ export default function Dashboard({children}) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <Link href='/chat' style={{textDecoration: 'none', color: 'white'}}>
+      <Link href='/chat' style={{textDecoration: 'none', color: 'black'}}>
       <MenuItem>
         <IconButton aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="secondary">
@@ -272,7 +272,7 @@ export default function Dashboard({children}) {
         <p>Notifications</p>
       </MenuItem>
       
-      <Link href='/user/profile' style={{textDecoration: 'none', color: 'white'}}>
+      <Link href='/user/profile' style={{textDecoration: 'none', color: 'black'}}>
         <MenuItem>
           <IconButton
             aria-label="account of current user"
@@ -316,7 +316,7 @@ export default function Dashboard({children}) {
             <GlobalSearchBar classes={{root: classes.inputRoot, input: classes.inputInput,}}/>
           </div>
           <div className={classes.sectionDesktop}>
-            
+
           <Link href='/chat' style={{textDecoration: 'none', color: 'white'}}>
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">

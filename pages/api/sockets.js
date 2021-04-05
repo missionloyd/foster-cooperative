@@ -1,15 +1,30 @@
 import { Server } from 'socket.io'
 import moment from 'moment';
+import Cors from 'cors';
+import initMiddleware from '../../lib/init-middleware'
+
+// Initialize the cors middleware
+const cors = initMiddleware(
+  // You can read more about the available options here: https://github.com/expressjs/cors#configuration-options
+  Cors({
+    // Only allow requests with GET, POST and OPTIONS
+    methods: ['GET', 'POST', 'OPTIONS'],
+  })
+)
 
 let users = [];
 
-const ioHandler = (req, res) => {
+async function ioHandler (req, res) {
+  // Run cors
+  await cors(req, res);
+
   if (!res.socket.server.io) {
     console.log('Initializing socket.io')
 
     const io = new Server(res.socket.server)
 
     io.on('connection', socket => {
+      
         socket.on("login", (userName) => {
             users.push({ id: socket.id, userName: userName, connectionTime: new moment().format("YYYY-MM-DD HH:mm:ss") });
             socket.emit("connecteduser", JSON.stringify(users[users.length - 1]));
