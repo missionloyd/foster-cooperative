@@ -1,13 +1,25 @@
 const express = require("express");
 const http = require("http");
+const cors = require("cors");
 const socketIo = require("socket.io");
 const port = process.env.PORT || 4001;
-const index = require("./routes/index");
+const index = require("../pages/api/routes/index");
 const moment = require("moment");
 const app = express();
 app.use(index);
+app.use(cors());
 const server = http.createServer(app);
-const io = socketIo(server);
+
+
+// socket setup
+const io = socket(server, {
+    cors: {
+       origin: "http://localhost:3000",
+       methods: ["GET", "POST"],
+       allowedHeaders: ["my-custom-header"],
+      credentials: true
+    }
+  });
 
 //const mongo = require('mongodb').MongoClient;
 // const dev = process.env.NODE_ENV != 'production';

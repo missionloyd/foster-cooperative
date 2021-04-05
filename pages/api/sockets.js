@@ -8,20 +8,30 @@ const cors = initMiddleware(
   // You can read more about the available options here: https://github.com/expressjs/cors#configuration-options
   Cors({
     // Only allow requests with GET, POST and OPTIONS
+    origin: "https://foster-cooperative-git-master-missionloyd.vercel.app/chat",
     methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ["Access-Control-Allow-Origin"],
+    credentials: true
   })
 )
 
 let users = [];
 
-async function ioHandler (req, res) {
+const ioHandler = (req, res) =>{
   // Run cors
-  await cors(req, res);
+  cors(req, res);
 
   if (!res.socket.server.io) {
     console.log('Initializing socket.io')
 
-    const io = new Server(res.socket.server)
+    const io = new Server(res.socket.server, {
+      cors: {
+         origin: "https://foster-cooperative-git-master-missionloyd.vercel.app/chat",
+         methods: ["GET", "POST", "OPTIONS",],
+         allowedHeaders: ["Access-Control-Allow-Origin"],
+        credentials: true
+      }
+    })
 
     io.on('connection', socket => {
       
