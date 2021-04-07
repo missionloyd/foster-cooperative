@@ -14,6 +14,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Link from 'next/link';
+import { Button, TextField } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function RecipeReviewCard() {
+export default function Post({ post, admin = false }) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -53,7 +55,12 @@ export default function RecipeReviewCard() {
         <Card className={classes.root}>
         <CardHeader
             avatar={
-            <Avatar aria-label="recipe" className={classes.avatar}>
+            <Avatar   
+              aria-label="recipe" 
+              className={classes.avatar}
+              component={Link}
+              to={`/${post.username}/${post.slug}`}
+            >
                 U
             </Avatar>
             }
@@ -62,7 +69,11 @@ export default function RecipeReviewCard() {
                 <MoreVertIcon />
             </IconButton>
             }
-            title="Name - Foster Parent since 2015"
+            title={
+              <Link href={`/${post.username}/${post.slug}`}>
+                <a>`${post.username} - Foster Parent since 2015`</a>
+              </Link>
+            }
             subheader="2 days ago"
         />
         <CardMedia
@@ -72,18 +83,19 @@ export default function RecipeReviewCard() {
         />
         <CardContent>
             <Typography variant="body2" color="textSecondary" component="p">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
-            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-            nisi ut aliquip ex ea commodo consequat.
+            {post.content}
             </Typography>
         </CardContent>
         <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
+            <IconButton aria-label="heart">
             <FavoriteIcon />
             </IconButton>
-            <IconButton aria-label="share">
+            <span>
+              {post.heartCount || 0}
+            </span>
+            {/* <IconButton aria-label="share">
             <ShareIcon />
-            </IconButton>
+            </IconButton> */}
             <IconButton
             className={clsx(classes.expand, {
                 [classes.expandOpen]: expanded,
@@ -98,8 +110,20 @@ export default function RecipeReviewCard() {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>
             <Typography paragraph>
-                Comment Section
+                {post.comments}
             </Typography>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+            />
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+            >
+              Post
+            </Button>
             </CardContent>
         </Collapse>
         </Card>

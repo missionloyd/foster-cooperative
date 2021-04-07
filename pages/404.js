@@ -30,7 +30,7 @@ const NotFound = () => {
     useEffect(() => {
         setTimeout(() => {
             router.push('/');
-        }, 4000)
+        }, 10000)
     }, [])
 
     return (
@@ -65,7 +65,7 @@ const NotFound = () => {
                   alt="Under development"
                   className={classes.image}
                   //src="/static/images/undraw_page_not_found_su7k.svg"
-                  src="/static/images/not_found.png"
+                  src="/static/images/spock.gif"
                 />
               </Box>
             </Container>

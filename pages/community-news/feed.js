@@ -1,17 +1,21 @@
-import React from 'react';
-import {
-  Box,
-  Container,
-  makeStyles,
-  Grid
-} from '@material-ui/core';
-import Pagination from '@material-ui/lab/Pagination';
-import Post from '../../components/community-news/Post';
+import React, { useState } from 'react';
+//import Pagination from '@material-ui/lab/Pagination';
+//import Post from '../../components/community-news/Post';
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 import ResizableIconButton from '../../components/community-news/ResizableIconButton';
 import Page from '../../components/shared/Page';
 import Dashboard from '../../layouts/DashboardLayout/Dashboard';
 import Link from '../../components/shared/Link';
+import PostsFeed from '../../components/community-news/PostFeed';
+import { firestore, fromMillis, postToJSON } from '../../lib/firebase';
+import LoadingSpinner from '../../components/shared/LoadingSpinner';
+import {
+  Box,
+  Container,
+  makeStyles,
+  Grid,
+  Button
+} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,8 +38,51 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const News = () => {
+// Max post to query per page
+const LIMIT = 1;
+
+export async function getServerSideProps(context) {
+  const postsQuery = firestore
+    .collectionGroup('posts')
+    .where('published', '==', true)
+    .orderBy('createdAt', 'desc')
+    .limit(LIMIT);
+
+  const posts = (await postsQuery.get()).docs.map(postToJSON);
+
+  return {
+    props: { posts }, // will be passed to the page component as props
+  };
+}
+
+function Feed(props) {
   const classes = useStyles();
+  const [posts, setPosts] = useState(props.posts);
+  const [loading, setLoading] = useState(false);
+
+  const [postsEnd, setPostsEnd] = useState(false);
+
+  const getMorePosts = async () => {
+    setLoading(true);
+    const last = posts[posts.length - 1];
+
+    const cursor = typeof last.createdAt === 'number' ? fromMillis(last.createdAt) : last.createdAt;
+
+    const query = firestore
+      .collectionGroup('posts')
+      .where('published', '==', true)
+      .orderBy('createdAt', 'desc')
+      .startAfter(cursor)
+      .limit(LIMIT);
+
+    const newPosts = (await query.get()).docs.map((doc) => doc.data());
+
+    setPosts(posts.concat(newPosts));
+    setLoading(false);
+
+
+  };
+
 
   return (
     <Page
@@ -61,42 +108,23 @@ const News = () => {
             </div>
           </div>
             <Grid container spacing={4} >
-              <Grid item xs={12} sm= {6} md={4} align="center">
+
+              <PostsFeed posts={posts} />
+
+              {!loading && !postsEnd && <Button onClick={getMorePosts}>Load more</Button>}
+
+              <LoadingSpinner show={loading} />
+              {postsEnd && 'Sorry, you have reached the end of the feed...'}
+              {/* <Grid item xs={12} sm= {6} md={4} align="center">
                 <Post/>
-              </Grid>
-              <Grid item xs={12} sm= {6} md={4} align="center">
-                <Post/>
-              </Grid>
-              <Grid item xs={12} sm= {6} md={4} align="center">
-                <Post/>
-              </Grid>
-              <Grid item xs={12} sm= {6} md={4} align="center">
-                <Post/>
-              </Grid>
-              <Grid item xs={12} sm= {6} md={4} align="center">
-                <Post/>
-              </Grid>
-              <Grid item xs={12} sm= {6} md={4} align="center">
-                <Post/>
-              </Grid>
+              </Grid> */}
             </Grid>
-          <Box
-          mt={3}
-          display="flex"
-          justifyContent="center"
-        >
-          <Pagination
-            color="primary"
-            count={3}
-            size="large"
-          />
-        </Box>
         </Container>
       </Box>
     </Page>
   );
 }
 
-News.layout = Dashboard;
+Feed.layout = Dashboard;
 
-export default News;
+export default Feed;

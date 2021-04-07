@@ -18,6 +18,7 @@ import { UserContext } from '../lib/context';
 import debounce from 'lodash.debounce';
 import { useRouter } from 'next/router';
 import { ContactsOutlined } from '@material-ui/icons';
+import { joinUserName } from '../util/join-user-name';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -113,12 +114,18 @@ function SignInButton() {
 
     // Create refs for both documents
     const userDoc = firestore.doc(`users/${user.uid}`);
-    //const usernameDoc = firestore.doc(`usernames/${formValue}`);
+    const usernameDoc = firestore.doc(`usernames/${joinUserName(user.displayName)}`);
 
     // Commit both docs together as a batch write.
     const batch = firestore.batch();
-    batch.set(userDoc, { username: user.displayName, email: user.email, photoURL: user.photoURL, uid: user.uid });
-    //batch.set(usernameDoc, { uid: user.uid });
+    batch.set(userDoc, { 
+      username: `${joinUserName(user.displayName)}`,
+      displayName: user.displayName, 
+      email: user.email, 
+      photoURL: user.photoURL, 
+      uid: user.uid });
+
+    batch.set(usernameDoc, { uid: user.uid });
 
     await batch.commit();
 
@@ -131,7 +138,7 @@ function SignInButton() {
       fullWidth
       onClick={signInwithGoogle} 
     >
-      <img src={'/google.png'} width="20rem" style={{marginRight: "0.5rem"}}/> Sign in with Google
+      <img src={'/google.png'} width="20rem" style={{marginRight: "0.5rem"}}/> Sign up with Google
     </Button>
   );
 }
@@ -161,37 +168,22 @@ function UsernameForm() {
   const onSubmit = async () => {
     // Create refs for both documents
     const userDoc = firestore.doc(`users/${user.uid}`);
-    const emailDoc = firestore.doc(`emails/${formValues.email}`);
+    const usernameDoc = firestore.doc(`usernames/${joinUserName((formValues.firstName +" "+ formValues.lastName).toString())}`);
 
     // Commit both docs together as a batch write.
     const batch = firestore.batch();
     //batch.set(userDoc, { username: formValue, photoURL: user.photoURL, displayName: user.displayName, uid: user.uid });
-    batch.set(userDoc, { displayName: formValues.firstName +' '+ formValues.lastName, email: formValues.email, uid: user.uid });
-    batch.set(emailDoc, { uid: user.uid });
+    batch.set(userDoc, { 
+      displayName: joinUserName((formValues.firstName +" "+ formValues.lastName).toString()), 
+      email: formValues.email, 
+      uid: user.uid 
+    });
+    batch.set(usernameDoc, { uid: user.uid });
 
     await batch.commit();
 
     router.push('/home');
   };
-
-  // const onChange = (e) => {
-  //   // Force form value typed in form to match correct format
-  //   const val = e.target.value.toLowerCase();
-  //   const re = /^(?=[a-zA-Z0-9._]{3,15}$)(?!.*[_.]{2})[^_.].*[^_.]$/;
-
-  //   // Only set form value if length is < 3 OR it passes regex
-  //   if (val.length < 3) {
-  //     setFormValues(val);
-  //     setLoading(false);
-  //     setIsValid(false);
-  //   }
-
-  //   if (re.test(val)) {
-  //     setFormValue(val);
-  //     setLoading(true);
-  //     setIsValid(false);
-  //   }
-  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
