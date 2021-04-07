@@ -12,8 +12,8 @@ import {
   TextField,
   makeStyles
 } from '@material-ui/core';
-import { useHttpClient } from '../../shared/hooks/http-hook';
-import { useForm } from '../../shared/hooks/form-hook';
+import { useHttpClient } from '../../../lib/hooks/http-hook';
+import { useForm } from '../../../lib/hooks/form-hook'
 import ImageUpload from '../../shared/FormElements/ImageUpload';
 import { Router } from 'next/router';
 

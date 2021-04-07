@@ -11,8 +11,10 @@ const HttpError = require('./models/http-error');
 
 const app = express();
 
-const DB_USERNAME = process.env.MONGO_ATLAS_USERNAME
-const DB_PASSWORD = process.env.MONGO_ATLAS_PW
+const dotenv = require('dotenv');
+dotenv.config();
+
+const MONGODB_URI = process.env.MONGODB_URI
 
 app.use(bodyParser.json());
 
@@ -29,7 +31,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/places', placesRoutes);
+//app.use('/api/places', placesRoutes);
 app.use('/api/users', usersRoutes);
 
 app.use((req, res, next) => {
@@ -47,12 +49,12 @@ app.use((error, req, res, next) => {
     return next(error);
   }
   res.status(error.code || 500);
+  console.log(error)
   res.json({ message: error.message || 'An unknown error occurred!' });
 });
 
 mongoose
-  .connect(
-    `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@fosteraz.4mh0c.mongodb.net/fosterAZ?retryWrites=true&w=majority`,
+  .connect(`${MONGODB_URI}`,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => {

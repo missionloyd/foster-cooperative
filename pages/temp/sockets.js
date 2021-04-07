@@ -17,9 +17,9 @@ const cors = initMiddleware(
 
 let users = [];
 
-const ioHandler = (req, res) =>{
+export default async function ioHandler (req, res) {
   // Run cors
-  cors(req, res);
+  await cors(req, res);
 
   if (!res.socket.server.io) {
     console.log('Initializing socket.io')
@@ -73,10 +73,10 @@ const ioHandler = (req, res) =>{
   res.end()
 }
 
-export const config = {
-  api: {
-    bodyParser: false
-  }
-}
+// export const config = {
+//   api: {
+//     bodyParser: false
+//   }
+// }
 
-export default ioHandler
+// export default ioHandler

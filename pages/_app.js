@@ -8,9 +8,11 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../styles/theme';
 import * as gtag from '../lib/gtag';
+import { UserContext } from '../lib/context';
 //import '../styles/globals.css';
 
 import PageChange from "../components/shared/PageChange.js";
+import { useUserData } from '../lib/hooks';
 
 Router.events.on("routeChangeStart", (url) => {
   //document.body.classList.add("body-page-transition");
@@ -29,38 +31,30 @@ Router.events.on("routeChangeError", () => {
   //document.body.classList.remove("body-page-transition");
 });
 
-export default class MyApp extends App{
+export default function MyApp(props){
 
-  static async getInitialProps({ Component, ctx }) {
-    let pageProps = {};
+  const { Component, pageProps } = props;
+  const Layout = Component.layout || (({children}) => <>{children}</>);
+  const userData = useUserData();
 
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
-
-    return { pageProps };
-  }
-
-  render(){
-    const { Component, pageProps } = this.props;
-    const Layout = Component.layout || (({children}) => <>{children}</>);
-
-    return (
-      <React.Fragment>
-        <Head>
-          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-        </Head>
-        <title>Foster Cooperative</title>
-        <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
+  return (
+    <React.Fragment>
+      <Head>
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+      </Head>
+      <title>Foster Cooperative</title>
+      <ThemeProvider theme={theme}>
+        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+        <CssBaseline />
+        <UserContext.Provider value={ userData }>
           <Layout>
             <Component {...pageProps} />
+            {/* <Toaster /> */}
           </Layout>
-        </ThemeProvider>
-      </React.Fragment>
-    );
-  }
+        </UserContext.Provider>
+      </ThemeProvider>
+    </React.Fragment>
+  );
 }
 
 MyApp.propTypes = {

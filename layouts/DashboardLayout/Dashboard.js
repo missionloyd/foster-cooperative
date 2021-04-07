@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 //import { Outlet } from 'react-router-dom';
 import clsx from 'clsx';
 import { fade, makeStyles } from '@material-ui/core/styles';
@@ -25,17 +25,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import MailIcon from '@material-ui/icons/Mail';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import GlobalSearchBar from './GlobalSearchBar/GlobalSearchBar';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-        Foster Cooperative
-      {" " + new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import Copyright from '../../components/shared/Copyright';
+import { UserContext } from '../../lib/context';
 
 const drawerWidth = 240;
 
@@ -181,6 +172,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard({children}) {
   const classes = useStyles();
+  
+  const { user, username } = useContext(UserContext);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);

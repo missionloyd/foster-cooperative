@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import Dashboard from "../layouts/DashboardLayout/Dashboard";
 import Page from "../components/shared/Page";
+import { AuthContext } from '../components/shared/context/auth-context';
+import { useHttpClient } from '../lib/hooks/http-hook';
 
-function Communities() {
+
+const Communities = () => {
+    const auth = useContext(AuthContext);
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
     return(
         <Page
         title="Communities"

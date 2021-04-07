@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import userGen from "username-generator"
 import { Button, TextField } from '@material-ui/core';
-import Dashboard from '../layouts/DashboardLayout/Dashboard';
-import { makeStyles } from '@material-ui/core/styles'
+import Dashboard from '../../layouts/DashboardLayout/Dashboard';
+import { makeStyles } from '@material-ui/core/styles';
+import { connectToDatabase } from '../../util/mongodb';
+
 
 const useStyles = makeStyles({
   textField: {
@@ -30,7 +32,8 @@ const useStyles = makeStyles({
 
 const socket = io();
 
-function Chat(props) {
+function Chat({usersRes}) {
+
   const classes = useStyles();
 
   const [user, setUser] = useState({
@@ -133,3 +136,18 @@ function Chat(props) {
 Chat.layout = Dashboard;
 
 export default Chat;
+
+export async function getServerSideProps(req, res) {
+  const { db } = await connectToDatabase();
+
+    const usersRes = await db
+      .collection("users")
+      .find()
+      .toArray();
+    
+    return{
+      props:{
+        usersRes
+      }
+    }
+}
