@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react';
-import { auth, firestore, googleAuthProvider } from '../lib/firebase';
+import { auth, firestore, googleAuthProvider } from '../firebase/firebase';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';

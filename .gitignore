@@ -11,7 +11,7 @@
 
 # next.js
 .next
-.next.config
+next.config
 
 # production
 /build
@@ -36,3 +36,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# firebase key
+firebase.json

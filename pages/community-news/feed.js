@@ -7,7 +7,7 @@ import Page from '../../components/shared/Page';
 import Dashboard from '../../layouts/DashboardLayout/Dashboard';
 import Link from '../../components/shared/Link';
 import PostsFeed from '../../components/community-news/PostFeed';
-import { firestore, fromMillis, postToJSON } from '../../lib/firebase';
+import { firestore, fromMillis, postToJSON } from '../../firebase/firebase';
 import LoadingSpinner from '../../components/shared/LoadingSpinner';
 import {
   Box,

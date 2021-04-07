@@ -1,6 +1,6 @@
 import PublicUserProfile from '../../../components/community-news/PublicUserProfile';
 import PostFeed from '../../../components/community-news/PostFeed';
-import { getUserWithUsername, postToJSON } from '../../../lib/firebase';
+import { getUserWithUsername, postToJSON } from '../../../firebase/firebase';
 import Dashboard from '../../../layouts/DashboardLayout/Dashboard';
 
 export async function getServerSideProps({ query }) {
