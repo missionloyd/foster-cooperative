@@ -19,7 +19,7 @@
 # misc
 .DS_Store
 *.pem
-/pages/temp/
+/temp
 
 # debug
 npm-debug.log*
