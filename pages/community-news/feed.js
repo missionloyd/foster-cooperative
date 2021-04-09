@@ -69,7 +69,6 @@ function Feed(props) {
   const getMorePosts = async () => {
     setLoading(true);
     const last = posts[posts.length - 1];
-    console.log(last);
 
     const cursor = typeof last.createdAt === 'number' ? fromMillis(last.createdAt) : last.createdAt;
 
