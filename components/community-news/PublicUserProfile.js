@@ -16,9 +16,7 @@ import {
 import PropTypes from 'prop-types';
 //import clsx from 'clsx';
 import moment from 'moment';
-// import ProfileView from '../../components/user/profile/ProfileView';
-// import ProfileDetails from '../../components/user/profile/ProfileDetails';
-// import Dashboard from '../../layouts/DashboardLayout/Dashboard';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -52,14 +50,14 @@ const PublicUserProfile = ({ user }) => {
         >
           <Avatar
             className={classes.avatar}
-            src={user.photoURL}
+            src={user.photoURL || "/static/images/spock.gif"}
           />
           <Typography
             color="textPrimary"
             gutterBottom
             variant="h3"
           >
-            {user.displayName}
+            {user.displayName || 'Anonymous User'}
           </Typography>
           <Typography
             color="textSecondary"
@@ -90,8 +88,8 @@ const PublicUserProfile = ({ user }) => {
   );
 };
 
-// PublicUserProfile.propTypes = {
-//   className: PropTypes.string
-// };
+PublicUserProfile.propTypes = {
+  className: PropTypes.string
+};
 
 export default PublicUserProfile;

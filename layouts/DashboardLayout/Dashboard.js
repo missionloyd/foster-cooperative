@@ -27,6 +27,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import GlobalSearchBar from './GlobalSearchBar/GlobalSearchBar';
 import Copyright from '../../components/shared/Copyright';
 import { UserContext } from '../../lib/context';
+import AuthCheck from '../../components/auth/AuthCheck';
 
 const drawerWidth = 240;
 
@@ -283,6 +284,7 @@ export default function Dashboard({children}) {
   );
 
   return (
+    // <AuthCheck>
     <div className={classes.root}>
       <CssBaseline />
       <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
@@ -378,5 +380,6 @@ export default function Dashboard({children}) {
         </Container>
       </main>
     </div>
+    // </AuthCheck> 
   );
 }

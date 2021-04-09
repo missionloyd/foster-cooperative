@@ -1,7 +1,6 @@
 import React, { useReducer, useEffect } from 'react';
-
 import { validate } from '../util/validators';
-//import './Input.css';
+import TextField from '@material-ui/core/TextField';
 
 const inputReducer = (state, action) => {
   switch (action.type) {
@@ -22,22 +21,21 @@ const inputReducer = (state, action) => {
   }
 };
 
-const Input = props => {
+const InputField = props => {
   const [inputState, dispatch] = useReducer(inputReducer, {
     value: props.initialValue || '',
     isTouched: false,
     isValid: props.initialValid || false
   });
 
-  const { id, onInput } = props;
+  const { id, onChange, errorText, ...other } = props;
   const { value, isValid } = inputState;
 
   useEffect(() => {
     onChange(id, value, isValid);
-  }, [id, value, isValid, onInput]);
+  }, [id, value, isValid, onChange]);
 
   const changeHandler = event => {
-    console.log(event.target.value)
     dispatch({
       type: 'CHANGE',
       val: event.target.value,
@@ -51,15 +49,29 @@ const Input = props => {
     });
   };
 
+
   const element =
     props.element === 'input' ? (
-      <input
+      // <input
+      //   id={props.id}
+      //   type={props.type}
+      //   placeholder={props.placeholder}
+      //   onChange={changeHandler}
+      //   onBlur={touchHandler}
+      //   value={inputState.value}
+      // />
+      <TextField 
+        variant={props.variant}
+        margin={props.margin}
         id={props.id}
-        type={props.type}
-        placeholder={props.placeholder}
-        onChange={changeHandler}
-        onBlur={touchHandler}
+        label={props.label}
+        name={props.name}
+        autoComplete={props.autoComplete}
         value={inputState.value}
+        error={(!inputState.isValid && inputState.value != '') ? true : false}
+        helperText={(!inputState.isValid && inputState.value != '') ? props.errorText : inputState.isTouched }
+        onChange={changeHandler}
+        {...other}
       />
     ) : (
       <textarea
@@ -72,16 +84,10 @@ const Input = props => {
     );
 
   return (
-    <div
-      className={`form-control ${!inputState.isValid &&
-        inputState.isTouched &&
-        'form-control--invalid'}`}
-    >
-      <label htmlFor={props.id}>{props.label}</label>
+    <div>
       {element}
-      {!inputState.isValid && inputState.isTouched && <p>{props.errorText}</p>}
     </div>
   );
 };
 
-export default Input;
+export default InputField;

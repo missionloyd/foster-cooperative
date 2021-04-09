@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const MainLayout = () => {
+const MainLayout = ({children}) => {
   const classes = useStyles();
 
   return (
@@ -38,7 +38,7 @@ const MainLayout = () => {
     <div className={classes.wrapper}>
       <div className={classes.contentContainer}>
         <div className={classes.content}>
-          {/* <Outlet /> */}
+          {children}
         </div>
       </div>
     </div>

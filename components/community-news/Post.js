@@ -11,7 +11,7 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
+import CommentIcon from '@material-ui/icons/ModeComment';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
@@ -19,9 +19,8 @@ import { Button, TextField } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minwidth: 450,
-    maxWidth: 450,
-    marginTop: 20,
+    width: '35rem',
+    marginBottom: '2rem'
   },
   media: {
     height: 0,
@@ -39,7 +38,18 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     backgroundColor: theme.palette.primary.main,
+    '&:hover': {
+      cursor: 'pointer'
+    }
   },
+  postTitle: {
+    color: 'inherit',
+    textDecoration: 'none',
+    '&:hover': {
+      textDecoration: 'underline',
+      cursor: 'pointer'
+    }
+  }
 }));
 
 export default function Post({ post, admin = false }) {
@@ -55,14 +65,14 @@ export default function Post({ post, admin = false }) {
         <Card className={classes.root}>
         <CardHeader
             avatar={
-            <Avatar   
-              aria-label="recipe" 
-              className={classes.avatar}
-              component={Link}
-              to={`/${post.username}/${post.slug}`}
-            >
-                U
-            </Avatar>
+              <Link href={`/${post.username}/${post.slug}`}>
+                <Avatar   
+                  aria-label="user" 
+                  className={classes.avatar}
+                  src={post.photoURL}
+                >
+                </Avatar>
+              </Link>
             }
             action={
             <IconButton aria-label="settings">
@@ -71,7 +81,7 @@ export default function Post({ post, admin = false }) {
             }
             title={
               <Link href={`/${post.username}/${post.slug}`}>
-                <a>`${post.username} - Foster Parent since 2015`</a>
+                <a className={classes.postTitle}>{post.username} - Foster Parent since 2015</a>
               </Link>
             }
             subheader="2 days ago"
@@ -83,19 +93,22 @@ export default function Post({ post, admin = false }) {
         />
         <CardContent>
             <Typography variant="body2" color="textSecondary" component="p">
-            {post.content}
+            {/* {post.content} */}
             </Typography>
         </CardContent>
         <CardActions disableSpacing>
             <IconButton aria-label="heart">
-            <FavoriteIcon />
+              <FavoriteIcon />
             </IconButton>
             <span>
               {post.heartCount || 0}
             </span>
-            {/* <IconButton aria-label="share">
-            <ShareIcon />
-            </IconButton> */}
+            <IconButton aria-label="comments" onClick={handleExpandClick}>
+              <CommentIcon />
+            </IconButton>
+            <span>
+              {post.commentsNumber || 0}
+            </span>
             <IconButton
             className={clsx(classes.expand, {
                 [classes.expandOpen]: expanded,
@@ -110,12 +123,13 @@ export default function Post({ post, admin = false }) {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>
             <Typography paragraph>
-                {post.comments}
+                {post.comments || "No comments yet!"}
             </Typography>
             <TextField
               variant="outlined"
               margin="normal"
               fullWidth
+              label="Add a nice comment right here..."
             />
             <Button
               fullWidth

@@ -21,7 +21,6 @@ const getUsers = async (req, res, next) => {
 
 const signup = async (req, res, next) => {
   const errors = validationResult(req);
-  console.log(errors)
   if (!errors.isEmpty()) {
     return next(
       new HttpError('Invalid inputs passed, please check your data.', 422)
@@ -63,7 +62,7 @@ const signup = async (req, res, next) => {
   const createdUser = new User({
     name,
     email,
-    image: req.file.path,
+    //image: req.file.path,
     password: hashedPassword,
     places: []
   });
@@ -116,7 +115,7 @@ const login = async (req, res, next) => {
   if (!existingUser) {
     const error = new HttpError(
       'Invalid credentials, could not log you in.',
-      401
+      403
     );
     return next(error);
   }
@@ -135,7 +134,7 @@ const login = async (req, res, next) => {
   if (!isValidPassword) {
     const error = new HttpError(
       'Invalid credentials, could not log you in.',
-      401
+      403
     );
     return next(error);
   }

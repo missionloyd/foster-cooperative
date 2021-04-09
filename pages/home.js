@@ -19,6 +19,7 @@ import post2 from '../components/home/demo/blog-post.2.md.js';
 import post3 from '../components/home/demo/blog-post.3.md.js';
 import Dashboard from "../layouts/DashboardLayout/Dashboard";
 import Page from "../components/shared/Page";
+import AuthCheck from '../components/auth/AuthCheck.js';
 
 //import './Home.css';
 

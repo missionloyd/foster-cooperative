@@ -6,7 +6,7 @@ import ResizableIconButton from '../../components/community-news/ResizableIconBu
 import Page from '../../components/shared/Page';
 import Dashboard from '../../layouts/DashboardLayout/Dashboard';
 import Link from '../../components/shared/Link';
-import PostsFeed from '../../components/community-news/PostFeed';
+import PostFeed from '../../components/community-news/PostFeed';
 import { firestore, fromMillis, postToJSON } from '../../firebase/firebase';
 import LoadingSpinner from '../../components/shared/LoadingSpinner';
 import {
@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
     height: '100%',
-    paddingBottom: theme.spacing(2),
     paddingTop: theme.spacing(2)
   },
   headerContainer: {
@@ -34,7 +33,12 @@ const useStyles = makeStyles((theme) => ({
   },
   feed: {
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
+  },
+  helpers: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%'
   }
 }));
 
@@ -65,12 +69,12 @@ function Feed(props) {
   const getMorePosts = async () => {
     setLoading(true);
     const last = posts[posts.length - 1];
+    console.log(last);
 
     const cursor = typeof last.createdAt === 'number' ? fromMillis(last.createdAt) : last.createdAt;
 
     const query = firestore
       .collectionGroup('posts')
-      .where('published', '==', true)
       .orderBy('createdAt', 'desc')
       .startAfter(cursor)
       .limit(LIMIT);
@@ -80,9 +84,10 @@ function Feed(props) {
     setPosts(posts.concat(newPosts));
     setLoading(false);
 
-
+    if (newPosts.length < LIMIT) {
+      setPostsEnd(true);
+    }
   };
-
 
   return (
     <Page
@@ -95,7 +100,7 @@ function Feed(props) {
         height="100%"
         justifyContent="center"
       >
-        <Container maxWidth={false}>
+        <Container maxWidth='xl'>
           <div className={classes.container}>
             <h1>Community News 👋</h1>
             <div className={classes.headerContainer}>
@@ -107,18 +112,14 @@ function Feed(props) {
               </Link>
             </div>
           </div>
-            <Grid container spacing={4} >
-
-              <PostsFeed posts={posts} />
-
-              {!loading && !postsEnd && <Button onClick={getMorePosts}>Load more</Button>}
-
-              <LoadingSpinner show={loading} />
-              {postsEnd && 'Sorry, you have reached the end of the feed...'}
-              {/* <Grid item xs={12} sm= {6} md={4} align="center">
-                <Post/>
-              </Grid> */}
-            </Grid>
+          <div className={classes.feed}>
+            <PostFeed posts={posts} />
+          </div>
+          <div className={classes.helpers}>
+            {!loading && !postsEnd && <Button onClick={getMorePosts}>Load more</Button>}
+            <LoadingSpinner show={loading} />
+            {postsEnd && 'Sorry, you have reached the end of the feed...'}
+          </div>
         </Container>
       </Box>
     </Page>

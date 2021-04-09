@@ -12,7 +12,7 @@ import { UserContext } from '../lib/context';
 //import '../styles/globals.css';
 
 import PageChange from "../components/shared/PageChange.js";
-import { useUserData } from '../lib/hooks';
+import { useUserData } from '../lib/hooks/auth-hook';
 
 Router.events.on("routeChangeStart", (url) => {
   //document.body.classList.add("body-page-transition");
@@ -47,9 +47,8 @@ export default function MyApp(props){
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <UserContext.Provider value={ userData }>
-          <Layout>
+          <Layout>  
             <Component {...pageProps} />
-            {/* <Toaster /> */}
           </Layout>
         </UserContext.Provider>
       </ThemeProvider>
