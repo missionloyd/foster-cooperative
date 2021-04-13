@@ -94,6 +94,9 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
   },
   drawerClose: {
     //backgroundColor: '#515fa8',
@@ -106,6 +109,9 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9) + 1,
     },
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
   },
   drawerCloseMobile: {
     // backgroundColor: '#515fa8',
@@ -117,6 +123,9 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(7) + 1,
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9) + 1,
+    },
+    '&::-webkit-scrollbar': {
+      display: 'none',
     },
   },
   appBarSpacer: theme.mixins.toolbar,
