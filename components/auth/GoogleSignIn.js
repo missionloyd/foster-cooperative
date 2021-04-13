@@ -5,6 +5,7 @@ import { UserContext } from '../../lib/context';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { joinUserName } from '../../util/join-user-name';
+import { useHttpClient } from '../../lib/hooks/http-hook';
 
 const useStyles = makeStyles((theme) => ({
   btnGoogle: {
@@ -17,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SignInButton({text}) {
 
   const { user, username } = useContext(UserContext);
+  const { sendRequest } = useHttpClient();
   const classes = useStyles();
   const router = useRouter();
 
@@ -41,6 +43,19 @@ export default function SignInButton({text}) {
     batch.set(usernameDoc, { uid: user.uid });
 
     await batch.commit();
+
+    // translate values into mongo
+    try {
+      const formData = new FormData();
+      formData.append('email', user.email);
+      formData.append('name', user.displayName);
+      formData.append('password', 'super_secret_dont_share');
+      const responseData = await sendRequest(
+        'http://localhost:5000/api/users/signup',
+        'POST',
+        formData
+      );
+    } catch (err) {console.log(err)}
 
     router.push('/home');
   };  

@@ -14,7 +14,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 import { useRouter } from "next/router";
 import { List } from '@material-ui/core';
-import { HowToVoteRounded } from '@material-ui/icons';
 
 
 const useStyles = makeStyles({

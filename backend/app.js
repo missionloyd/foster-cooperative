@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const cors = require("cors");
 const dotenv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -11,22 +12,21 @@ const HttpError = require('./models/http-error');
 
 const app = express();
 
+// Port that the webserver listens to
+const PORT = process.env.PORT || 5000;
+
 dotenv.config();
 
+// Body Parser middleware to parse request bodies
+app.use(
+  bodyParser.urlencoded({
+    extended: false,
+  })
+);
 app.use(bodyParser.json());
 
-app.use('/uploads/images', express.static(path.join('uploads', 'images')));
-
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-  );
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
-
-  next();
-});
+// CORS middleware
+app.use(cors());
 
 app.use('/api/places', placesRoutes);
 app.use('/api/users', usersRoutes);
@@ -50,12 +50,14 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(process.env.MONGODB_URI,
-    { useNewUrlParser: true, useUnifiedTopology: true }
+  .connect(process.env.MONGODB_URI, { 
+    useNewUrlParser: true,
+    useFindAndModify: false, 
+    useUnifiedTopology: true }
   )
   .then(() => {
-    app.listen(5000);
-    console.log("Connected to database!");
+    app.listen(PORT);
+    console.log(`Server Running on port ${PORT}`);
   })
   .catch(err => {
     console.log("Connection failed!");

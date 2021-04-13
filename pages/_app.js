@@ -9,8 +9,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../styles/theme';
 import * as gtag from '../lib/gtag';
 import { UserContext } from '../lib/context';
-//import '../styles/globals.css';
-
 import PageChange from "../components/shared/PageChange.js";
 import { useUserData } from '../lib/hooks/auth-hook';
 

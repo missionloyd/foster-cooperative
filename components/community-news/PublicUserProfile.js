@@ -35,7 +35,7 @@ const user = {
   timezone: 'GTM-7'
 };
 
-const PublicUserProfile = ({ user }) => {
+export default function PublicUserProfile({ user }){
   const classes = useStyles();
 
   return (
@@ -50,14 +50,14 @@ const PublicUserProfile = ({ user }) => {
         >
           <Avatar
             className={classes.avatar}
-            src={user.photoURL || "/static/images/spock.gif"}
+            src={user?.photoURL || "/static/images/spock.gif"}
           />
           <Typography
             color="textPrimary"
             gutterBottom
             variant="h3"
           >
-            {user.displayName || 'Anonymous User'}
+            {user?.displayName || 'Anonymous User'}
           </Typography>
           <Typography
             color="textSecondary"
@@ -87,9 +87,3 @@ const PublicUserProfile = ({ user }) => {
     </Card>
   );
 };
-
-PublicUserProfile.propTypes = {
-  className: PropTypes.string
-};
-
-export default PublicUserProfile;

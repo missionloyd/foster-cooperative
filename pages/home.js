@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -19,7 +19,9 @@ import post2 from '../components/home/demo/blog-post.2.md.js';
 import post3 from '../components/home/demo/blog-post.3.md.js';
 import Dashboard from "../layouts/DashboardLayout/Dashboard";
 import Page from "../components/shared/Page";
-import AuthCheck from '../components/auth/AuthCheck.js';
+import fetcher from '../lib/fetcher';
+import useSWR from 'swr';
+
 
 //import './Home.css';
 
@@ -34,7 +36,7 @@ const mainFeaturedPost = {
   title: 'Welcome to Foster Arizona\'s Newest Platform',
   description:
     "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting about our new website.",
-  image: 'https://source.unsplash.com/random',
+  image: '',
   imgText: 'main image description',
   // linkText: 'Continue reading…',
 };
@@ -90,8 +92,17 @@ const sidebar = {
   ],
 };
 
-const Home = () => {
+const Home = (props) => {
   const classes = useStyles();
+
+  // const { data, error } = useSWR('/api/getUnsplash', fetcher);
+
+  // if (error) { console.log(error) }
+  // if (!data) { console.log("Data does not exist!") }
+
+  const { data } = useSWR('/api/unsplash', fetcher);
+
+  const url = (data?.result.response.urls.regular);
 
   return (
     <Page
@@ -100,7 +111,7 @@ const Home = () => {
       <CssBaseline />
       <Container maxWidth="xl">
         <main>
-          <MainFeaturedPost post={mainFeaturedPost} />
+          <MainFeaturedPost post={mainFeaturedPost} url={url} />
           <Grid container spacing={4}>
             {featuredPosts.map((post) => (
               <FeaturedPost key={post.title} post={post} />
@@ -117,6 +128,7 @@ const Home = () => {
           </Grid>
         </main>
       </Container>
+      {props.image}
     </Page>
   );
 }
@@ -124,3 +136,30 @@ const Home = () => {
 Home.layout = Dashboard;
 
 export default Home;
+
+//const fetcher = (url) => fetch(url).then((res) => res.json());
+
+// export async function getInitialProps(context) {
+//   const fetcher = (url) => fetch(url).then((res) => res.json());
+//   const { data, error } = useSWR('/api/getUnsplash', fetcher);
+
+//   if (error) { 
+//     console.log(error) 
+//     return {
+//       error: true,
+//     }
+//   }
+
+//   if (!data) {
+//     console.log("Data does not exist!")
+//     return {
+//       notFound: true,
+//     }
+//   }
+
+//   console.log(data)
+
+//   return {
+//     props: { data },
+//   }
+// }

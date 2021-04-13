@@ -24,23 +24,22 @@
     "firebase": "^8.3.2",
     "firebase-admin": "^9.6.0",
     "leaflet": "^1.7.1",
-    "lodash.debounce": "^4.0.8",
     "markdown-to-jsx": "^7.1.2",
     "moment": "^2.29.1",
     "mongodb": "^3.6.5",
     "mongoose": "^5.12.3",
     "next": "10.1.2",
     "next-firebase-auth": "*",
+    "notistack": "^1.0.5",
     "react": "17.0.2",
+    "react-device-detect": "^1.17.0",
     "react-dom": "17.0.2",
     "react-firebase-hooks": "^3.0.3",
     "react-hot-toast": "^1.0.2",
     "react-leaflet": "^3.1.0",
-    "react-loading-skeleton": "^2.2.0",
-    "socket.io": "^4.0.1",
-    "socket.io-client": "^4.0.1",
     "styled-components": "^5.2.3",
-    "username-generator": "^1.1.0"
+    "swr": "^0.5.5",
+    "unsplash-js": "^7.0.10"
   },
   "browser": {
     "child_process": false

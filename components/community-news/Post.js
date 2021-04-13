@@ -69,7 +69,7 @@ export default function Post({ post, admin = false }) {
                 <Avatar   
                   aria-label="user" 
                   className={classes.avatar}
-                  src={post.photoURL}
+                  src={post?.photoURL || '/static/images/anonymous'}
                 >
                 </Avatar>
               </Link>
@@ -81,7 +81,7 @@ export default function Post({ post, admin = false }) {
             }
             title={
               <Link href={`/${post.username}/${post.slug}`}>
-                <a className={classes.postTitle}>{post.username} - Foster Parent since 2015</a>
+                <a className={classes.postTitle}>{post?.username || 'Anonymous User'} - Foster Parent since 2015</a>
               </Link>
             }
             subheader="2 days ago"
@@ -100,7 +100,7 @@ export default function Post({ post, admin = false }) {
             <IconButton aria-label="heart">
               <FavoriteIcon />
             </IconButton>
-            <span>
+            <span style={{marginRight: '2rem'}}>
               {post.heartCount || 0}
             </span>
             <IconButton aria-label="comments" onClick={handleExpandClick}>
@@ -123,7 +123,7 @@ export default function Post({ post, admin = false }) {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>
             <Typography paragraph>
-                {post.comments || "No comments yet!"}
+                {post?.comments || "No comments yet!"}
             </Typography>
             <TextField
               variant="outlined"
