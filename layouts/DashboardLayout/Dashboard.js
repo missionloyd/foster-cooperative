@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-//import { Outlet } from 'react-router-dom';
 import clsx from 'clsx';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -29,8 +28,7 @@ import GlobalSearchBar from './GlobalSearchBar/GlobalSearchBar';
 import Copyright from '../../components/shared/Copyright';
 import { UserContext } from '../../lib/context';
 import AuthCheck from '../../components/auth/AuthCheck';
-import { Hidden } from '@material-ui/core';
-import { isMobile } from 'react-device-detect';
+import { Avatar, Hidden } from '@material-ui/core';
 
 const drawerWidth = 240;
 
@@ -84,49 +82,42 @@ const useStyles = makeStyles((theme) => ({
     },
     flexGrow: 1
   },
-  drawerPaper: {
-    position: 'relative',
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
     whiteSpace: 'nowrap',
-    backgroundColor: '#515fa8',
+  },
+  drawerOpen: {
+    //backgroundColor: '#515fa8',
     width: drawerWidth,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    overflowY: 'scrollable'
   },
-  drawerPaperClose: {
-    overflowX: 'hidden',
+  drawerClose: {
+    //backgroundColor: '#515fa8',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    width: theme.spacing(7),
+    overflowX: 'hidden',
+    width: theme.spacing(7) + 1,
     [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9),
+      width: theme.spacing(9) + 1,
     },
   },
-  drawerPaperMobile: {
-    position: 'relative',
-    whiteSpace: 'nowrap',
-    backgroundColor: '#515fa8',
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    overflowY: 'scrollable'
-  },
-  drawerPaperCloseMobile: {
-    overflowX: 'hidden',
+  drawerCloseMobile: {
+    // backgroundColor: '#515fa8',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    // width: theme.spacing(7),
-    // [theme.breakpoints.up('sm')]: {
-    //   width: theme.spacing(9),
-    // },
+    overflowX: 'hidden',
+    width: theme.spacing(7) + 1,
+    [theme.breakpoints.up('sm')]: {
+      width: theme.spacing(9) + 1,
+    },
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
@@ -196,10 +187,20 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
+  },
+  small: {
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+  },
+  menuItems: {
+    alignItems: 'center'
+  },
+  drawerColor: {
+    background: '#515fa8'
   }
 }));
 
-export default function Dashboard({children}) {
+export default function Dashboard({ children }) {
   const classes = useStyles();
   
   //const { user, username } = useContext(UserContext);
@@ -207,7 +208,7 @@ export default function Dashboard({children}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobile, setMobile] = React.useState(false);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -280,7 +281,7 @@ export default function Dashboard({children}) {
       keepMounted
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
+      onClick={handleMobileMenuClose}
     >
       <Link href='/chat' style={{textDecoration: 'none', color: 'black'}}>
       <MenuItem>
@@ -310,7 +311,8 @@ export default function Dashboard({children}) {
             aria-haspopup="true"
             color="inherit"
           >
-            <AccountCircle />
+            {/* <AccountCircle /> */}
+            <Avatar className={classes.small} src='/static/images/avatar_6.png'/>
           </IconButton>
           <p>Profile</p>
         </MenuItem>
@@ -322,7 +324,7 @@ export default function Dashboard({children}) {
     // <AuthCheck>
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="absolute" className={clsx(classes.appBar, !isMobile || (open && classes.appBarShift))}>
+      <AppBar position="absolute" className={clsx(classes.appBar, !mobile || (open && classes.appBarShift))}>
         <Toolbar className={classes.toolbar}>
           <IconButton
             edge="start"
@@ -350,6 +352,7 @@ export default function Dashboard({children}) {
               <img src={logo} alt= "" width = '70' height = '70'/>
           </div> */}
           <Hidden smDown>
+            {mobile}
           <div className={classes.grow} />
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -360,32 +363,35 @@ export default function Dashboard({children}) {
           </Hidden>
           <div className={classes.sectionDesktop}>
 
-          <Link href='/chat' style={{textDecoration: 'none', color: 'white'}}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-          </Link>
-          
           {renderMenu}
           {renderMobileMenu}
 
-          <IconButton aria-label="show 17 new notifications" color="inherit">
-            <Badge badgeContent={17} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <IconButton
-            edge="end"
-            aria-label="account of current user"
-            aria-controls={menuId}
-            aria-haspopup="true"
-            onClick={handleProfileMenuOpen}
-            color="inherit"
-          >
-            <AccountCircle />
-          </IconButton>
+          <div className={classes.menuItems}>
+            <Link href='/chat' style={{textDecoration: 'none', color: 'white'}}>
+              <IconButton aria-label="show 4 new mails" color="inherit">
+                <Badge badgeContent={4} color="secondary">
+                  <MailIcon />
+                </Badge>
+              </IconButton>
+            </Link>
+
+            <IconButton aria-label="show 17 new notifications" color="inherit">
+              <Badge badgeContent={17} color="secondary">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+            <IconButton
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
+            >
+              {/* <AccountCircle /> */}
+              <Avatar className={classes.small} src='/static/images/avatar_6.png'/>
+            </IconButton>
+          </div>
           </div>
           <div className={classes.sectionMobile}>
             <IconButton
@@ -402,12 +408,20 @@ export default function Dashboard({children}) {
       </AppBar>
       <div ref={drawerRef}></div>
       <Hidden mdUp>
+        {setMobile}
         <Drawer
           variant="temporary"
+          className={clsx(classes.drawer, {
+            [classes.drawerOpen]: open,
+            [classes.drawerCloseMobile]: !open,
+          })}
           classes={{
-            paper: clsx(classes.drawerPaperMobile, !open && classes.drawerPaperCloseMobile),
+            paper: clsx({
+              [classes.drawerOpen]: open,
+              [classes.drawerCloseMobile]: !open,
+              [classes.drawerColor]: open || !open,
+            }),
           }}
-          style={{position: 'fixed'}}
           ModalProps={{
             keepMounted: true   // Better open performance on mobile.
           }}
@@ -428,11 +442,18 @@ export default function Dashboard({children}) {
       <Hidden smDown implementation="css">
       <Drawer
         variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
         open={open}
-        
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: open,
+          [classes.drawerClose]: !open,
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+            [classes.drawerColor]: open || !open,
+          }),
+        }}
         >
         <div className={classes.toolbarIcon}>
           <IconButton onClick={handleDrawerClose}>
@@ -440,9 +461,9 @@ export default function Dashboard({children}) {
           </IconButton>
         </div>
         <Divider />
-        <MainListItems/>
+        <MainListItems />
         <Divider />
-        <SecondaryListItems/>
+        <SecondaryListItems />
       </Drawer>
       </Hidden>
       <main className={classes.content}>

@@ -94,13 +94,15 @@ export default function Post({ post, admin = false }) {
         <CardContent>
             <Typography variant="body2" color="textSecondary" component="p">
             {/* {post.content} */}
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             </Typography>
         </CardContent>
         <CardActions disableSpacing>
             <IconButton aria-label="heart">
               <FavoriteIcon />
             </IconButton>
-            <span style={{marginRight: '2rem'}}>
+            <span style={{marginRight: '0.5rem'}}>
               {post.heartCount || 0}
             </span>
             <IconButton aria-label="comments" onClick={handleExpandClick}>

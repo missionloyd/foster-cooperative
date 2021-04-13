@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 
 export default function FeaturedPost(props) {
   const classes = useStyles();
-  const { post } = props;
+  const { post, url } = props;
 
   return (
     <Grid item xs={12} md={6}>
@@ -46,7 +46,7 @@ export default function FeaturedPost(props) {
             </CardContent>
           </div>
           <Hidden xsDown>
-            <CardMedia className={classes.cardMedia} image={post.image} title={post.imageTitle} />
+            <CardMedia className={classes.cardMedia} image={url} title={post.imageTitle} />
           </Hidden>
         </Card>
       </CardActionArea>

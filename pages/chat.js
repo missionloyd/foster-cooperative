@@ -3,17 +3,18 @@ import Dashboard from "../layouts/DashboardLayout/Dashboard";
 import Page from "../components/shared/Page";
 import AuthCheck from "../components/auth/AuthCheck.js"
 
-
 const Chat = () => {
-    return(
+  return(
+      <Page
+      title="Chat"
+      >   
+        <h1>Tesing Authentication Here!</h1>
+        
         <AuthCheck>
-        <Page
-        title="Chat"
-        >   
-            <h1>Welcome to the Communities Page</h1>
-        </Page>
+          <h1>You are signed in</h1>
         </AuthCheck>
-    )
+      </Page>
+  )
 }
 
 Chat.layout = Dashboard;

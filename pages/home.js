@@ -47,7 +47,7 @@ const featuredPosts = [
     date: 'Nov 12',
     description:
       'This is a wider card with supporting text below as a natural lead-in to additional content.',
-    image: 'https://source.unsplash.com/random',
+    image: '',
     imageText: 'Image Text',
     link: "",
     action: 'Continue reading...'
@@ -57,7 +57,7 @@ const featuredPosts = [
     date: 'Nov 11',
     description:
       'This is a wider card with supporting text below as a natural lead-in to additional content.',
-    image: 'https://source.unsplash.com/random',
+    image: '',
     imageText: 'Image Text',
     link: "/community-news",
     action: 'Explore...'
@@ -114,7 +114,7 @@ const Home = (props) => {
           <MainFeaturedPost post={mainFeaturedPost} url={url} />
           <Grid container spacing={4}>
             {featuredPosts.map((post) => (
-              <FeaturedPost key={post.title} post={post} />
+              <FeaturedPost key={post.title} post={post} url={url} />
             ))}
           </Grid>
           <Grid container spacing={5} className={classes.mainGrid}>

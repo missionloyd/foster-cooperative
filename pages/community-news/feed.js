@@ -39,6 +39,11 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     width: '100%'
+  },
+  button: {
+    background: '#03b0b5',
+    width: '10rem',
+    color: 'white',
   }
 }));
 
@@ -115,7 +120,9 @@ function Feed(props) {
             <PostFeed posts={posts} />
           </div>
           <div className={classes.helpers}>
-            {!loading && !postsEnd && <Button onClick={getMorePosts}>Load more</Button>}
+            {!loading && !postsEnd && 
+              <Button onClick={getMorePosts} variant="contained" className={classes.button}>Load more</Button>
+            }
             <LoadingSpinner show={loading} />
             {postsEnd && 'Sorry, you have reached the end of the feed...'}
           </div>
