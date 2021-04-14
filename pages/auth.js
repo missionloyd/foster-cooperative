@@ -26,6 +26,7 @@ import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE
 } from '../components/shared/util/validators';
+import Router from 'next/router';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -85,7 +86,7 @@ export default function Auth() {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const { data } = useSWR('/api/unsplash', fetcher);
-  const url = (data?.result.response.urls.regular);
+  const url = (data?.result.response.urls.regular || 'https://source.unsplash.com/random');
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -160,6 +161,7 @@ export default function Auth() {
         defaultAuth.login(responseData.userId, responseData.token);
       } catch (err) {}
     }
+    Router.push('/');
   }
 
   return (

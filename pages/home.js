@@ -59,7 +59,7 @@ const featuredPosts = [
       'This is a wider card with supporting text below as a natural lead-in to additional content.',
     image: '',
     imageText: 'Image Text',
-    link: "/community-news",
+    link: "/community-news/feed",
     action: 'Explore...'
   },
 ];
@@ -102,7 +102,7 @@ const Home = (props) => {
 
   const { data } = useSWR('/api/unsplash', fetcher);
 
-  const url = (data?.result.response.urls.regular);
+  const url = (data?.result.response.urls.regular || 'https://source.unsplash.com/random');
 
   return (
     <Page
