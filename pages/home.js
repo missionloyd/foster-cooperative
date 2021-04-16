@@ -14,9 +14,9 @@ import FeaturedPost from '../components/home/FeaturedPost.js';
 import Main from '../components/home/Main.js';
 import Sidebar from '../components/home/Sidebar';
 
-import post1 from '../components/home/demo/blog-post.1.md.js';
-import post2 from '../components/home/demo/blog-post.2.md.js';
-import post3 from '../components/home/demo/blog-post.3.md.js';
+import post1 from '../data/demo-data/blog-post.1.md.js';
+import post2 from '../data/demo-data/blog-post.2.md.js';
+import post3 from '../data/demo-data/blog-post.3.md.js';
 import Dashboard from "../layouts/DashboardLayout/Dashboard";
 import Page from "../components/shared/Page";
 import fetcher from '../lib/fetcher';
