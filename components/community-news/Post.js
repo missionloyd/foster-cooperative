@@ -15,6 +15,8 @@ import CommentIcon from '@material-ui/icons/ModeComment';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
+import fetcher from '../../lib/fetcher';
+import useSWR from 'swr';
 import { Button, TextField } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -56,6 +58,9 @@ export default function Post({ post, admin = false }) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
+  const { data } = useSWR('/api/unsplash', fetcher);
+  const url = (data?.result.response.urls.regular || 'https://source.unsplash.com/random');
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -88,14 +93,12 @@ export default function Post({ post, admin = false }) {
         />
         <CardMedia
             className={classes.media}
-            image="https://source.unsplash.com/random"
-            title="Paella dish"
+            image={url}
+            title="post-image"
         />
         <CardContent>
             <Typography variant="body2" color="textSecondary" component="p">
-            {/* {post.content} */}
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            {post.content || ''}
             </Typography>
         </CardContent>
         <CardActions disableSpacing>

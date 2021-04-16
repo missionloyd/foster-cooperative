@@ -1,5 +1,5 @@
 import React from 'react'
-import { owners } from '../../demo/demo-data/tasks';
+import { owners } from '../../data/demo-data/tasks';
 import { makeStyles } from '@material-ui/core/styles'
 import { Paper } from '@material-ui/core';
 import Item from './Item';

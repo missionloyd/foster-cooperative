@@ -21,8 +21,8 @@ import {
 //import ColorLens from '@material-ui/icons/ColorLens';
 import { withStyles } from '@material-ui/core/styles';
 
-import { owners } from '../../demo/demo-data/tasks';
-import { appointments } from '../../demo/demo-data/tasks';
+import { owners } from '../../data/demo-data/tasks';
+import { appointments } from '../../data/demo-data/tasks';
 
 const resources = [{
   fieldName: 'ownerId',

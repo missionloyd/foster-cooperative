@@ -95,11 +95,6 @@ const sidebar = {
 const Home = (props) => {
   const classes = useStyles();
 
-  // const { data, error } = useSWR('/api/getUnsplash', fetcher);
-
-  // if (error) { console.log(error) }
-  // if (!data) { console.log("Data does not exist!") }
-
   const { data } = useSWR('/api/unsplash', fetcher);
 
   const url = (data?.result.response.urls.regular || 'https://source.unsplash.com/random');
@@ -136,30 +131,3 @@ const Home = (props) => {
 Home.layout = Dashboard;
 
 export default Home;
-
-//const fetcher = (url) => fetch(url).then((res) => res.json());
-
-// export async function getInitialProps(context) {
-//   const fetcher = (url) => fetch(url).then((res) => res.json());
-//   const { data, error } = useSWR('/api/getUnsplash', fetcher);
-
-//   if (error) { 
-//     console.log(error) 
-//     return {
-//       error: true,
-//     }
-//   }
-
-//   if (!data) {
-//     console.log("Data does not exist!")
-//     return {
-//       notFound: true,
-//     }
-//   }
-
-//   console.log(data)
-
-//   return {
-//     props: { data },
-//   }
-// }

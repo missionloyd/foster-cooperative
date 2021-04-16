@@ -76,3 +76,12 @@ export default function SignInButton({text}) {
 function SignOutButton() {
   return <button onClick={() => auth.signOut()}>Sign Out</button>
 }
+
+function defaultSignOut() {
+  return <button onClick={() => firebase.auth().signOut().then(() => {
+    // Sign-out successful.
+  }).catch((error) => {
+    // An error happened.
+  })
+  }></button>
+}

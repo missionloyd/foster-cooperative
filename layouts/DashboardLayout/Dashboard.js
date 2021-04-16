@@ -211,8 +211,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard({ children }) {
   const classes = useStyles();
-  
-  //const { user, username } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const drawerRef = React.useRef();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -321,7 +320,7 @@ export default function Dashboard({ children }) {
             color="inherit"
           >
             {/* <AccountCircle /> */}
-            <Avatar className={classes.small} src='/static/images/avatar_6.png'/>
+            <Avatar className={classes.small} src={user?.photoURL || '/static/images/avatar_6.png'}/>
           </IconButton>
           <p>Profile</p>
         </MenuItem>
@@ -398,7 +397,7 @@ export default function Dashboard({ children }) {
               color="inherit"
             >
               {/* <AccountCircle /> */}
-              <Avatar className={classes.small} src='/static/images/avatar_6.png'/>
+              <Avatar className={classes.small} src={user?.photoURL || '/static/images/avatar_6.png'}/>
             </IconButton>
           </div>
           </div>
@@ -416,8 +415,8 @@ export default function Dashboard({ children }) {
         </Toolbar>
       </AppBar>
       <div ref={drawerRef}></div>
-      <Hidden mdUp>
-        {setMobile}
+      <Hidden smUp>
+        {/* {setMobile} */}
         <Drawer
           variant="temporary"
           className={clsx(classes.drawer, {

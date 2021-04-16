@@ -67,13 +67,6 @@ const useStyles = makeStyles((theme) => ({
       textDecoration: 'underline',
       cursor: 'pointer'
     }
-  },
-  nameContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  spacer: {
-    margin: theme.spacing(1)
   }
 }));
 
@@ -107,7 +100,8 @@ export default function Auth() {
       setFormData(
         {
           ...formState.inputs,
-          name: undefined,
+          fname: undefined,
+          lname: undefined,
           image: undefined
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
@@ -116,7 +110,11 @@ export default function Auth() {
       setFormData(
         {
           ...formState.inputs,
-          name: {
+          fname: {
+            value: '',
+            isValid: false
+          },
+          lname: {
             value: '',
             isValid: false
           }
@@ -145,13 +143,14 @@ export default function Auth() {
           }
         );
         defaultAuth.login(responseData.userId, responseData.token);
+        Router.push('/');
       } catch (err) {}
     } 
-    else if (!isLoginMode) {
+    else {
       try {
         const formData = new FormData();
         formData.append('email', formState.inputs.email.value);
-        formData.append('name', formState.inputs.name.value);
+        formData.append('name', formState.inputs.fname.value + " " + formState.inputs.lname.value);
         formData.append('password', formState.inputs.password.value);
         const responseData = await sendRequest(
           'http://localhost:5000/api/users/signup',
@@ -159,9 +158,9 @@ export default function Auth() {
           formData
         );
         defaultAuth.login(responseData.userId, responseData.token);
+        Router.push('/nextsteps');
       } catch (err) {}
     }
-    Router.push('/');
   }
 
   return (
@@ -181,20 +180,40 @@ export default function Auth() {
               <h1>{error}</h1>
                 <form className={classes.form} noValidate onSubmit={authSubmitHandler}>
                   {!isLoginMode && (
-                    <InputField 
-                      element="input"
-                      variant="outlined"
-                      margin="normal"
-                      fullWidth
-                      required
-                      id="name"
-                      label="Full Name"
-                      name="name"
-                      autoComplete="name"
-                      errorText="Please provide your name"
-                      validators={[VALIDATOR_REQUIRE()]}
-                      onChange={inputHandler}   
-                    />
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={6}>
+                        <InputField 
+                          element="input"
+                          variant="outlined"
+                          margin="normal"
+                          fullWidth
+                          required
+                          id="fname"
+                          label="First Name"
+                          name="first name"
+                          autoComplete="first name"
+                          errorText="Please provide your first name"
+                          validators={[VALIDATOR_REQUIRE()]}
+                          onChange={inputHandler}   
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <InputField 
+                          element="input"
+                          variant="outlined"
+                          margin="normal"
+                          fullWidth
+                          required
+                          id="lname"
+                          label="Last Name"
+                          name="last name"
+                          autoComplete="first name"
+                          errorText="Please provide your last name"
+                          validators={[VALIDATOR_REQUIRE()]}
+                          onChange={inputHandler}   
+                        />
+                      </Grid>
+                    </Grid>
                   )}
                   <InputField
                     element="input"
