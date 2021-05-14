@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 //import Pagination from '@material-ui/lab/Pagination';
 //import Post from '../../components/community-news/Post';
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
-import ResizableIconButton from '../../components/community-news/ResizableIconButton';
-import Page from '../../components/shared/Page';
-import Dashboard from '../../layouts/DashboardLayout/Dashboard';
-import Link from '../../components/shared/Link';
-import PostFeed from '../../components/community-news/PostFeed';
-import { firestore, fromMillis, postToJSON } from '../../firebase/firebase';
-import LoadingSpinner from '../../components/shared/LoadingSpinner';
+import ResizableIconButton from '../../../components/community-news/ResizableIconButton';
+import Page from '../../../components/shared/Page';
+import Dashboard from '../../../layouts/DashboardLayout/Dashboard';
+import Link from '../../../components/shared/Link';
+import PostFeed from '../../../components/community-news/PostFeed';
+import { firestore, fromMillis, postToJSON } from '../../../firebase/firebase';
+import LoadingSpinner from '../../../components/shared/LoadingSpinner';
 import {
   Box,
   Container,
@@ -58,6 +58,9 @@ export async function getServerSideProps(context) {
     .limit(LIMIT);
 
   const posts = (await postsQuery.get()).docs.map(postToJSON);
+
+  // const { username } = await posts;
+  // const user = await getUserWithUsername(username);
 
   return {
     props: { posts }, // will be passed to the page component as props
@@ -109,7 +112,7 @@ function Feed(props) {
             <h1>Community News 👋</h1>
             <div className={classes.headerContainer}>
               <h1>New Post</h1>
-              <Link href="/community-news/new-post" passHref>
+              <Link href={`/home`} passHref>
                 <ResizableIconButton size='large'>
                   <AddCircleRoundedIcon />
                 </ResizableIconButton>

@@ -108,11 +108,11 @@ export const SecondaryListItems = () => {
 return (
   <List>
     <ListSubheader inset>Your Saved Pages</ListSubheader>
-    <div className={router.pathname == "/community-news/feed" ? classes.active : classes.inactive}>
-      <Link href='/community-news/feed' passHref>
+    <div className={router.pathname == "/community-news/feed/feed" ? classes.active : classes.inactive}>
+      <Link href='/community-news/feed/feed' passHref>
         <ListItem button component="a">
           <ListItemIcon>
-            <LinkIcon className={router.pathname == "/community-news/feed" ? classes.active : classes.inactive}/>
+            <LinkIcon className={router.pathname == "/community-news/feed/feed" ? classes.active : classes.inactive}/>
           </ListItemIcon>
           <ListItemText primary="Community News" />
         </ListItem>

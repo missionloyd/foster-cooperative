@@ -83,6 +83,14 @@ export default function Auth() {
 
   const [formState, inputHandler, setFormData] = useForm(
     {
+      fname: {
+        value: '',
+        isValid: true
+      },
+      lname: {
+        value: '',
+        isValid: true
+      },
       email: {
         value: '',
         isValid: false
