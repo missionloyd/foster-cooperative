@@ -22,7 +22,8 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import AccountTreeOutlinedIcon from '@material-ui/icons/AccountTreeOutlined';
 import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
 import moment from 'moment';
-import { getUserWithUsername } from '../../firebase/firebase';
+import { firestore } from '../../firebase/firebase';
+import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,6 +66,25 @@ const useStyles = makeStyles((theme) => ({
     warn: theme.error
   }
 }));
+
+function PostPhotoManager({post}) {
+  const classes = useStyles();
+  const userRef = firestore.collection('users').doc(post.uid);
+  const [user] = useDocumentData(userRef);
+
+  return (
+    <>
+    {user && (
+      <Avatar   
+      aria-label="user" 
+      className={classes.avatar}
+      src={user?.photoURL || '/static/images/anonymous'}
+      >
+      </Avatar>
+    )}
+    </>
+  );
+}
 
 export default function Post({ post, admin = false }) {
   const classes = useStyles();
@@ -131,12 +151,9 @@ export default function Post({ post, admin = false }) {
       <CardHeader
           avatar={
             <Link href={`/users/${post.username}`}>
-              <Avatar   
-                aria-label="user" 
-                className={classes.avatar}
-                src={post?.photoURL || '/static/images/anonymous'}
-              >
-              </Avatar>
+              <a>
+                <PostPhotoManager post={post} />
+              </a>
             </Link>
           }
           action={
@@ -151,7 +168,7 @@ export default function Post({ post, admin = false }) {
           }
           title={
             <Link href={`/users/${post.username}`}>
-              <a className={classes.postTitle}>{post?.user || 'Anonymous User'} - Foster Parent since 2015</a>
+              <a className={classes.postTitle}>{post?.owner || 'Anonymous User'} - Foster Parent since 2015</a>
             </Link>
           }
           subheader={post.updatedAt ? moment(post.updatedAt).format('LLL') : '...'}

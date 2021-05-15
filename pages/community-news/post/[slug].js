@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import { useRouter } from 'next/router'
 import {
   Container,
-  makeStyles
+  makeStyles,
+  Typography
 } from '@material-ui/core';
 import {
   Box,
@@ -13,14 +15,15 @@ import {
   Grid,
   TextField,
 } from '@material-ui/core';
+import { Checkbox } from '@material-ui/core';
 import Page from '../../../components/shared/Page';
 import { useForm } from 'react-hook-form';
 import Dashboard from '../../../layouts/DashboardLayout/Dashboard';
 import AuthCheck from '../../../components/auth/AuthCheck';
-import { useRouter } from 'next/router';
-import { auth, firestore } from '../../../firebase/firebase';
+import { auth, firestore, serverTimestamp } from '../../../firebase/firebase';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import ImageUploader from '../../../components/shared/FormElements/ImageUploader';
+import toast, { Toaster } from 'react-hot-toast';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,6 +32,12 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(3),
     paddingTop: theme.spacing(3),
     flexGrow: 1
+  },
+  checkboxContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '10rem'
   }
 }));
 
@@ -51,8 +60,10 @@ const NewPost = () => {
 
 function PostManager() {
   const [preview, setPreview] = useState(false);
+
   const router = useRouter();
   const { slug } = router.query;
+
   const postRef = firestore.collection('users').doc(auth.currentUser.uid).collection('posts').doc(slug);
   const [post] = useDocumentData(postRef);
 
@@ -67,35 +78,53 @@ function PostManager() {
 
 function PostForm({ defaultValues, postRef, preview }){
   const classes = useStyles();
-  const { register, handleSubmit, reset, watch, formState: { errors } } = useForm({ defaultValues, mode: 'onChange' });
+  const router = useRouter();
+  const { register, handleSubmit, reset, setValue, watch, formState } = useForm({ defaultValues, mode: 'onChange' });
+  const { isValid, isDirty } = formState;
 
-  const updatePost = async ({ content }) => {
+  const success = () => toast.success('Post updated successfully!');
+
+  const updatePost = async ({ content, photoURL, published }) => {
     await postRef.update({
       content,
+      photoURL,
+      published,
       updatedAt: serverTimestamp(),
     });
 
-    reset({ content });
+    reset({ content, photoURL, published });
 
-    toast.success('Post updated successfully!')
+    console.log(published);
+
+    await toast.success('Post updated successfully!');
+    await router.back();
   };
 
-  const { ref, ...contentProps} = register("content", {
+  // content 
+  const { ref: contentRef, ...contentProps} = register("content", {
     required: { value: true, message: 'Content is required'},
     maxLength: { value: 500, message: 'Content is too long' },
     minLength: { value: 10, message: 'Content is too short' }
   });
 
-  //console.log(errors)
+  // photoURL
+  const { ref, ...photoProps } = register("photoURL");
+  const photoRef = useRef(null);
+
+  // publish
+  const { ref: publishedRef, ...publishedProps} = register("published");
+
   return (
     <form
       autoComplete="off"
       noValidate
       onSubmit={handleSubmit(updatePost)}
     >
+      <Toaster />
       <Card>
         <CardHeader
           title="New Post 📩"
+          // titleTypographyProps={{variant:'h1' }}
         />
         <Divider />
         <CardContent>
@@ -115,28 +144,41 @@ function PostForm({ defaultValues, postRef, preview }){
                 multiline
                 rows={2}
                 rowsMax={10}
-                inputRef={ref}
+                inputRef={contentRef}
                 {...contentProps}
-                error={!!errors.content}
-                helperText={errors?.content?.message}
+                error={!!formState.content}
+                helperText={formState?.content?.message}
               />
             </Grid>
             <Grid item xs={12}>
-              <ImageUploader post={defaultValues}/>
+              <ImageUploader post={defaultValues} {...photoProps} name="photoURL" photoRef={(e) => {
+                ref(e)
+                photoRef.current = e?.src;
+                setValue("photoURL", e?.src);
+              }} />
             </Grid>
           </Grid>
         </CardContent>
         <Divider />
         <Box
           display="flex"
-          justifyContent="flex-end"
+          justifyContent="space-between"
           p={2}
         >
+          <Box
+            display="flex"
+            alignItems="center"
+          >
+           <Checkbox color="primary" ref={publishedRef} {...publishedProps} onChange={(e) => {
+                setValue("published", e.target.checked);
+              }}/>
+           <Typography>Publish Post</Typography>
+          </Box>
           <Button
             color="primary"
             variant="contained"
             type="submit"
-            disabled={errors?.content?.message != null}
+            disabled={(!isValid || !isDirty)}
           >
             Save Post
           </Button>

@@ -59,9 +59,6 @@ export async function getServerSideProps(context) {
 
   const posts = (await postsQuery.get()).docs.map(postToJSON);
 
-  // const { username } = await posts;
-  // const user = await getUserWithUsername(username);
-
   return {
     props: { posts }, // will be passed to the page component as props
   };
@@ -95,6 +92,10 @@ function Feed(props) {
       setPostsEnd(true);
     }
   };
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  }
 
   return (
     <Page

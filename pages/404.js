@@ -7,6 +7,8 @@ import {
     makeStyles
 } from '@material-ui/core';
 import Page from '../components/shared/Page';
+import toast from 'react-hot-toast';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,6 +72,9 @@ const NotFound = () => {
               </Box>
             </Container>
           </Box>
+          <button onClick={() => toast.success('Post updated successfully!'), console.log("test")}>
+              Click me!!
+          </button>
         </Page>
       );
 };

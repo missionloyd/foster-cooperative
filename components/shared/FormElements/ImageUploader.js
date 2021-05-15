@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 
 // Uploads images to Firebase Storage
-export default function ImageUploader({post}) {
+export default function ImageUploader({post, name, photoRef}) {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [downloadURL, setDownloadURL] = useState(null);
@@ -44,15 +44,17 @@ export default function ImageUploader({post}) {
       <Loader show={uploading} />
       {uploading && <h1>{progress}%</h1>}
 
-        {downloadURL ? (
+        {downloadURL && !uploading ? (
           <ImageContainer>
             <ImagePreview
               src={downloadURL}
               alt="Picture uploaded by author"
               // className="custom-img"
+              ref={photoRef}
+              name={name}
             />
           </ImageContainer>
-        ): post?.photoURL ? (
+        ): post?.photoURL && !uploading ? (
           <ImageContainer>
             <ImagePreview
               src={post?.photoURL}
