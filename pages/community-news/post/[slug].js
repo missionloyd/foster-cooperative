@@ -66,6 +66,7 @@ function PostManager() {
 
   const postRef = firestore.collection('users').doc(auth.currentUser.uid).collection('posts').doc(slug);
   const [post] = useDocumentData(postRef);
+  console.log(postRef);
 
   return (
     <>
@@ -81,8 +82,7 @@ function PostForm({ defaultValues, postRef, preview }){
   const router = useRouter();
   const { register, handleSubmit, reset, setValue, watch, formState } = useForm({ defaultValues, mode: 'onChange' });
   const { isValid, isDirty } = formState;
-
-  const success = () => toast.success('Post updated successfully!');
+  const [ photoURL, setPhotoURL ] = useState('');
 
   const updatePost = async ({ content, photoURL, published }) => {
     await postRef.update({
@@ -99,6 +99,9 @@ function PostForm({ defaultValues, postRef, preview }){
     await toast.success('Post updated successfully!');
     await router.back();
   };
+  
+  // watch
+  const currentPublished = watch("published");
 
   // content 
   const { ref: contentRef, ...contentProps} = register("content", {
@@ -108,8 +111,8 @@ function PostForm({ defaultValues, postRef, preview }){
   });
 
   // photoURL
-  const { ref, ...photoProps } = register("photoURL");
-  const photoRef = useRef(null);
+  const { ref: photoRef, ...photoProps } = register("photoURL");
+  //const photoRef = useRef(null);
 
   // publish
   const { ref: publishedRef, ...publishedProps} = register("published");
@@ -138,12 +141,14 @@ function PostForm({ defaultValues, postRef, preview }){
             >
               <TextField
                 fullWidth
-                label="Post"
+                label="Content"
                 variant="outlined"
                 defaultValue=""
                 multiline
                 rows={2}
                 rowsMax={10}
+                id="content"
+                name="content"
                 inputRef={contentRef}
                 {...contentProps}
                 error={!!formState.content}
@@ -152,9 +157,12 @@ function PostForm({ defaultValues, postRef, preview }){
             </Grid>
             <Grid item xs={12}>
               <ImageUploader post={defaultValues} {...photoProps} name="photoURL" photoRef={(e) => {
-                ref(e)
+                photoRef(e)
                 photoRef.current = e?.src;
-                setValue("photoURL", e?.src);
+                setPhotoURL(e?.src);
+                setValue("photoURL", photoURL, {
+                  shouldDirty: true
+                });
               }} />
             </Grid>
           </Grid>
@@ -169,8 +177,11 @@ function PostForm({ defaultValues, postRef, preview }){
             display="flex"
             alignItems="center"
           >
-           <Checkbox color="primary" ref={publishedRef} {...publishedProps} onChange={(e) => {
-                setValue("published", e.target.checked);
+           <Checkbox color="primary" checked={currentPublished} ref={publishedRef} {...publishedProps} onChange={(e) => {
+                setValue("published", e.target.checked, {
+                  shouldValidate: true,
+                  shouldDirty: true
+                });
               }}/>
            <Typography>Publish Post</Typography>
           </Box>

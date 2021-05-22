@@ -43,5 +43,8 @@
   },
   "browser": {
     "child_process": false
+  },
+  "devDependencies": {
+    "typescript": "^4.2.4"
   }
 }

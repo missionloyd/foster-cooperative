@@ -24,6 +24,7 @@ import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
 import moment from 'moment';
 import { firestore } from '../../firebase/firebase';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
+import HeartButton from '../../components/shared/FormElements/HeartButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -184,6 +185,7 @@ export default function Post({ post, admin = false }) {
           </Typography>
       </CardContent>
       <CardActions disableSpacing>
+          {/* <HeartButton postRef={post} /> */}
           <IconButton aria-label="heart">
             <FavoriteIcon />
           </IconButton>
