@@ -44,6 +44,17 @@ export async function getUserWithUsername(username) {
 }
 
 /**`
+ * Gets a users/{uid} document with uid
+ * @param  {string} uid
+ */
+ export async function getUserWithUid(uid) {
+  const usersRef = firestore.collection('users');
+  const query = usersRef.where('uid', '==', uid).limit(1);
+  const userDoc = (await query.get()).docs[0];
+  return userDoc;
+}
+
+/**`
  * Converts a firestore document to JSON
  * @param  {DocumentSnapshot} doc
  */

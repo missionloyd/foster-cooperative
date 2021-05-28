@@ -16,6 +16,7 @@ import {
   Grid,
   Button
 } from '@material-ui/core';
+import AuthCheck from '../../../components/auth/AuthCheck';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,18 +60,27 @@ export async function getServerSideProps(context) {
 
   const posts = (await postsQuery.get()).docs.map(postToJSON);
 
+  const commentsQuery = firestore
+    .collectionGroup('comments')
+    //.where('karma', '>=', 0)
+    .orderBy('createdAt', 'desc')
+    // .limit(LIMIT);
+
+  const comments = (await commentsQuery.get()).docs.map(postToJSON);
+  
+
   return {
-    props: { posts }, // will be passed to the page component as props
+    props: { posts, comments }, // will be passed to the page component as props
   };
 }
 
 function Feed(props) {
   const classes = useStyles();
   const [posts, setPosts] = useState(props.posts);
+  const [comments, setComments] = useState(props.comments)
   const [loading, setLoading] = useState(false);
 
   const [postsEnd, setPostsEnd] = useState(false);
-
   const getMorePosts = async () => {
     setLoading(true);
     const last = posts[posts.length - 1];
@@ -108,6 +118,7 @@ function Feed(props) {
         height="100%"
         justifyContent="center"
       >
+        <AuthCheck>
         <Container maxWidth='xl'>
           <div className={classes.container}>
             <h1>Community News 👋</h1>
@@ -121,7 +132,7 @@ function Feed(props) {
             </div>
           </div>
           <div className={classes.feed}>
-            <PostFeed posts={posts} />
+            <PostFeed posts={posts} comments={comments} />
           </div>
           <div className={classes.helpers}>
             {!loading && !postsEnd && 
@@ -131,6 +142,7 @@ function Feed(props) {
             {postsEnd && 'Sorry, you have reached the end of the feed...'}
           </div>
         </Container>
+        </AuthCheck>
       </Box>
     </Page>
   );

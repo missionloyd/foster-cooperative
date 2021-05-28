@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import Post from './Post';
 
-export default function PostFeed({ posts, admin }) {
+export default function PostFeed({ posts, comments, admin }) {
   return posts ? posts.map((post) => 
     <Post
         post={post} 
+        comments={comments}
         key={post.slug}
         admin={admin}
     />) : null;

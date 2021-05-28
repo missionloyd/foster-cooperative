@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -15,7 +15,6 @@ import CommentIcon from '@material-ui/icons/ModeComment';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
-import { Badge, Button, TextField } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
@@ -23,8 +22,9 @@ import AccountTreeOutlinedIcon from '@material-ui/icons/AccountTreeOutlined';
 import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
 import moment from 'moment';
 import { firestore } from '../../firebase/firebase';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
-import HeartButton from '../../components/shared/FormElements/HeartButton';
+import { useDocumentData, useDocument } from 'react-firebase-hooks/firestore';
+import HeartButton from '../../components/community-news/HeartButton';
+import PostCommentSection from './PostCommentSection';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,7 +87,44 @@ function PostPhotoManager({post}) {
   );
 }
 
-export default function Post({ post, admin = false }) {
+function PostHeartManager({ post }) {
+  const postRef = firestore.collection('users').doc(post?.uid).collection('posts').doc(post?.slug);
+  return (
+    <>
+    {postRef && (
+      <div>
+      <HeartButton 
+        post={post}
+        postRef={postRef}
+      />
+      </div>
+    )}
+    </>
+  );
+}
+
+function PostCommentManager({ post, comments }) {
+  const postRef = firestore.collection('users').doc(post?.uid).collection('posts').doc(post?.slug);
+  // const commentsRef = postRef.collection('comments').doc('comments');
+  // const [commentsDoc] = useDocument(commentsRef);
+  return (
+    <>
+    {postRef && (
+      <div>
+      <PostCommentSection 
+        post={post}
+        postRef={postRef}
+        comments={comments}
+      />
+      </div>
+    )}
+    </>
+  );
+}
+
+
+
+export default function Post({ post, comments, admin = false }) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -174,7 +211,8 @@ export default function Post({ post, admin = false }) {
           }
           subheader={post.updatedAt ? moment(post.updatedAt).format('LLL') : '...'}
       />
-      {post?.photoURL && (<CardMedia
+      {post?.photoURL && (
+        <CardMedia
           className={classes.media}
           image={url}
           title="post-image"
@@ -185,18 +223,12 @@ export default function Post({ post, admin = false }) {
           </Typography>
       </CardContent>
       <CardActions disableSpacing>
-          {/* <HeartButton postRef={post} /> */}
-          <IconButton aria-label="heart">
-            <FavoriteIcon />
-          </IconButton>
-          <span style={{marginRight: '0.5rem'}}>
-            {post.heartCount || 0}
-          </span>
+          <PostHeartManager post={post} />
           <IconButton aria-label="comments" onClick={handleExpandClick}>
             <CommentIcon />
           </IconButton>
           <span>
-            {post.commentsNumber || 0}
+            {post?.comments?.length || 0}
           </span>
           <IconButton
           className={clsx(classes.expand, {
@@ -211,22 +243,7 @@ export default function Post({ post, admin = false }) {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-          <Typography paragraph>
-              {post?.comments || "No comments yet!"}
-          </Typography>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label="Add a nice comment right here..."
-          />
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-          >
-            Post
-          </Button>
+            <PostCommentManager post={post} comments={comments} />
           </CardContent>
       </Collapse>
       </Card>
