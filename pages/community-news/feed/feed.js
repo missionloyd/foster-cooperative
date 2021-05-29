@@ -79,7 +79,6 @@ function Feed(props) {
   const [comments, setComments] = useState(props.comments)
   const [loading, setLoading] = useState(false);
   const [postsEnd, setPostsEnd] = useState(false);
-  console.log(comments)
   const getMorePosts = async () => {
     setLoading(true);
     const last = posts[posts.length - 1];

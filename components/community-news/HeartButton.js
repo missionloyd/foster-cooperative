@@ -40,7 +40,7 @@ export default function Heart({ post, postRef }) {
       <IconButton onClick={removeHeart} aria-label="heart">
         <FavoriteIcon style={{fill: 'red'}} />
       </IconButton>
-      <span style={{marginRight: '0.5rem'}}>
+      <span style={{marginRight: '0.2rem'}}>
         {heartCount || 0}
       </span>
     </>
@@ -49,7 +49,7 @@ export default function Heart({ post, postRef }) {
       <IconButton onClick={addHeart} aria-label="heart">
         <FavoriteIcon />
       </IconButton>
-      <span style={{marginRight: '0.5rem'}}>
+      <span style={{marginRight: '0.2rem'}}>
         {heartCount || 0}
       </span>
     </>

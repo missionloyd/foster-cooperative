@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from "../../lib/context";
-import { firestore, auth, serverTimestamp, getUserWithUid, postToJSON } from '../../firebase/firebase';
+import { firestore, auth, serverTimestamp, getUserWithUid, increment } from '../../firebase/firebase';
 import firebase from 'firebase/app'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -22,8 +22,6 @@ import moment from 'moment';
 import { timeSince } from '../../util/timeSince';
 import Divider from '@material-ui/core/Divider';
 import { joinUserName } from "../../util/join-user-name";
-
-
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -73,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export default function PostCommentSection({ post, postRef, comments }) {
+export default function PostCommentSection({ post, postRef, comments, onCommentUpdate }) {
   const router = useRouter();
   const classes = useStyles();
   const { username } = useContext(UserContext);
@@ -81,51 +79,60 @@ export default function PostCommentSection({ post, postRef, comments }) {
   const commentRef = postRef.collection('comments').doc(auth.currentUser.uid);
   const [commentDoc] = useDocument(commentRef);
   const [comment, setComment] = useState('');
-  const [tempComment, setTempComment] = useState('');
-  const [timestamp, setTimestamp] = useState(null);
+  const [tempComment, setTempComment] = useState([]);
   const [modifiedComments, setModifiedComments] = useState([]);
   const [value, setValue] = useState([]);
-  console.log(comments)
 
   const createMarkup = html => {
     return { __html: html }
   }
 
-  // create a user-to-comment relationship
+  // create a user-to-post relationship
   const addComment = async (e) => {
     e.preventDefault();
-    setTimestamp(await firebase.firestore.Timestamp.fromDate(new Date()));
 
     if(commentDoc?.exists) {
       commentRef.update({
-        comments: firebase.firestore.FieldValue.arrayUnion(
-          {
-            comment: comment,
-            uid: auth.currentUser.uid,
-            createdAt: await timestamp,
-            karma: 0
-          },
-        ),
+        uid: auth.currentUser.uid,
+        comment: firebase.firestore.FieldValue.arrayUnion(comment),
+        updatedAt: serverTimestamp(),
+        snapshots: firebase.firestore.FieldValue.arrayUnion((await firebase.firestore.Timestamp.fromDate(new Date()).toDate().toString())),
       });
     } else {
-      // create new field of type object array
+      // create new field of type string array
       const data = {
-        comments: [
-          {
-            comment: comment,
-            uid: auth.currentUser.uid,
-            createdAt: await timestamp,
-            karma: 0
-          }
-        ],
+        comment: [comment],
+        uid: auth.currentUser.uid,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        snapshots: [(await firebase.firestore.Timestamp.fromDate(new Date()).toDate().toString())],
+        karma: 0
       };
 
       await ref.set(data);
       await toast.success('Comment posted!');
     }
-    await setTempComment(comment);
+
+    // increment commentCount (firebase)
+    const batch = firestore.batch();
+    batch.update(postRef, { commentCount: increment(1) });
+    await batch.commit();
+
+    handleCommentCountIncrease();
+
+    await setTempComment(tempComment => [...tempComment, comment]);
     await setComment("");
   };
+
+  // increment commentCount locally
+  const handleCommentCountIncrease = useCallback(e => {
+    onCommentUpdate(prev => prev + 1)
+  }, [onCommentUpdate]);
+
+  const handleCommentCountDecrease = useCallback(e => {
+    onCommentUpdate(prev => prev - 1)
+  }, [onCommentUpdate]);
+  
 
   // remove a user-to-post relationship
   const removeComment = async () => {
@@ -134,9 +141,11 @@ export default function PostCommentSection({ post, postRef, comments }) {
     if(commentDoc?.exists) {
       commentRef.update({
         //update
-        comments: firebase.firestore.FieldRemove.arrayUnion(comment),
+        comments: firebase.firestore.FieldRemove.arrayUnion([comment]),
       });
     } 
+
+    handleCommentCountDecrease();
 
     await setComment("");
     await toast.success('Comment Removed!');
@@ -212,16 +221,10 @@ export default function PostCommentSection({ post, postRef, comments }) {
     <>  
     <Toaster /> 
     <Divider variant="middle" className={classes.divider} />
-    {console.log(modifiedComments)}
-    {modifiedComments?.map((c, key) => {
+    {modifiedComments?.map(c => {
+        return c.comment.comment.map((j, key) => {
       if(karmaCheck(c.comment.karma)) {
 
-          Object.keys(c.comment.comment).map(test => {
-            if(c.comment.comment[test].length > 1) {
-              console.log(c.comment.comment[test])
-            }
-          });
-        
         return (      
             <Card className={classes.card} key={key} >
               <CardContent>
@@ -244,13 +247,13 @@ export default function PostCommentSection({ post, postRef, comments }) {
                           />
                         </Link>
                         <Typography variant="body2" color="textSecondary" component="p">
-                          {c.comment.createdAt ? timeSince(c.comment.createdAt) : '...' }
+                          {c.comment.createdAt ? timeSince(c.comment.snapshots[key]) : '...' }
                         </Typography>
                       </div>
                       <Typography
                         variant="body2"
                         gutterBottom
-                        dangerouslySetInnerHTML={createMarkup(c.comment.comment)}
+                        dangerouslySetInnerHTML={createMarkup(j)}
                         className={classes.commentText}
                       />
                     </div>
@@ -268,9 +271,11 @@ export default function PostCommentSection({ post, postRef, comments }) {
             </Card> 
         );  
       }})
+    })
     || "No comments yet!"}
-      {tempComment && (      
-          <Card className={classes.card}>
+      {tempComment?.map((c, key) => {
+       return (      
+          <Card className={classes.card} key={key}>
             <CardContent>
               <div className={classes.commentCard}>
                 <div className={classes.commentContent}>
@@ -297,10 +302,11 @@ export default function PostCommentSection({ post, postRef, comments }) {
                     <Typography
                       variant="body2"
                       gutterBottom
-                      dangerouslySetInnerHTML={createMarkup(tempComment)}
+                      dangerouslySetInnerHTML={createMarkup(c)}
                       className={classes.commentText}
                     />
                   </div>
+                  {console.log(c)}
                 </div>
                   <IconButton 
                   aria-label="options"
@@ -313,7 +319,7 @@ export default function PostCommentSection({ post, postRef, comments }) {
               </div>
             </CardContent>
           </Card> 
-        )  
+        )})
       }
     <form onSubmit={addComment}>
       <TextField

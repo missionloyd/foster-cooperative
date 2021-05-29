@@ -102,7 +102,7 @@ function PostHeartManager({ post }) {
     </>
   );
 }
-function PostCommentManager({ post, comments }) {
+function PostCommentManager({ post, comments, onCommentUpdate }) {
   const postRef = firestore.collection('users').doc(post?.uid).collection('posts').doc(post?.slug);
   // const commentsRef = postRef.collection('comments').doc('comments');
   // const [commentsDoc] = useDocument(commentsRef);
@@ -115,6 +115,7 @@ function PostCommentManager({ post, comments }) {
         post={post}
         postRef={postRef}
         comments={comments}
+        onCommentUpdate={onCommentUpdate}
       />
       </div>
     )}
@@ -126,6 +127,7 @@ export default function Post({ post, comments, admin = false }) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [commentCount, setCommentCount] = React.useState(post.commentCount);
   const isMenuOpen = Boolean(anchorEl);
   const url = (post?.photoURL);
 
@@ -226,7 +228,7 @@ export default function Post({ post, comments, admin = false }) {
             <CommentIcon />
           </IconButton>
           <span>
-            {comments?.length || 0}
+            {commentCount || 0}
           </span>
           <IconButton
           className={clsx(classes.expand, {
@@ -241,7 +243,7 @@ export default function Post({ post, comments, admin = false }) {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <PostCommentManager post={post} comments={comments} />
+            <PostCommentManager post={post} comments={comments} onCommentUpdate={setCommentCount} />
           </CardContent>
       </Collapse>
       </Card>
