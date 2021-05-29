@@ -102,11 +102,11 @@ function PostHeartManager({ post }) {
     </>
   );
 }
-
 function PostCommentManager({ post, comments }) {
   const postRef = firestore.collection('users').doc(post?.uid).collection('posts').doc(post?.slug);
   // const commentsRef = postRef.collection('comments').doc('comments');
   // const [commentsDoc] = useDocument(commentsRef);
+
   return (
     <>
     {postRef && (
@@ -121,8 +121,6 @@ function PostCommentManager({ post, comments }) {
     </>
   );
 }
-
-
 
 export default function Post({ post, comments, admin = false }) {
   const classes = useStyles();
@@ -228,7 +226,7 @@ export default function Post({ post, comments, admin = false }) {
             <CommentIcon />
           </IconButton>
           <span>
-            {post?.comments?.length || 0}
+            {comments?.length || 0}
           </span>
           <IconButton
           className={clsx(classes.expand, {

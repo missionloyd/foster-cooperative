@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from "../../lib/context";
@@ -16,6 +16,14 @@ import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Avatar from '@material-ui/core/Avatar';
 import toast, {Toaster} from 'react-hot-toast';
+import Link from 'next/link';
+import { karmaCheck } from "../../util/karmaCheck";
+import moment from 'moment';
+import { timeSince } from '../../util/timeSince';
+import Divider from '@material-ui/core/Divider';
+import { joinUserName } from "../../util/join-user-name";
+
+
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -33,12 +41,36 @@ const useStyles = makeStyles((theme) => ({
   commentText: {
     display: 'flex',
     alignItems: 'center',
-    marginLeft: '0.5rem'
+    marginLeft: '0.8rem',
   },
-  small: {
+  titleText: {
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: '0.8rem',
+    marginRight: '0.2rem',
+    color: 'inherit',
+    textDecoration: 'none',
+    '&:hover': {
+      textDecoration: 'underline',
+      cursor: 'pointer'
+    }
+  },
+  titleContainer: {
+    display: 'flex',
+    justifyContent: 'flex-start'
+  },
+  avatar: {
     width: theme.spacing(5),
     height: theme.spacing(5),
+    backgroundColor: theme.palette.primary.main,
+    '&:hover': {
+      cursor: 'pointer'
+    }
   },
+  divider: {
+    marginTop: '-1rem',
+    marginBottom: '1rem'
+  }
 }))
 
 export default function PostCommentSection({ post, postRef, comments }) {
@@ -49,34 +81,49 @@ export default function PostCommentSection({ post, postRef, comments }) {
   const commentRef = postRef.collection('comments').doc(auth.currentUser.uid);
   const [commentDoc] = useDocument(commentRef);
   const [comment, setComment] = useState('');
-  const [query, setQuery] = useState('');
+  const [tempComment, setTempComment] = useState('');
+  const [timestamp, setTimestamp] = useState(null);
+  const [modifiedComments, setModifiedComments] = useState([]);
+  const [value, setValue] = useState([]);
+  console.log(comments)
 
   const createMarkup = html => {
     return { __html: html }
   }
 
-  // create a user-to-post relationship
+  // create a user-to-comment relationship
   const addComment = async (e) => {
     e.preventDefault();
+    setTimestamp(await firebase.firestore.Timestamp.fromDate(new Date()));
 
     if(commentDoc?.exists) {
       commentRef.update({
-        comments: firebase.firestore.FieldValue.arrayUnion(comment),
+        comments: firebase.firestore.FieldValue.arrayUnion(
+          {
+            comment: comment,
+            uid: auth.currentUser.uid,
+            createdAt: await timestamp,
+            karma: 0
+          },
+        ),
       });
     } else {
-      // create new field of type string array
+      // create new field of type object array
       const data = {
-        comment: comment,
-        uid: auth.currentUser.uid,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        karma: 0
+        comments: [
+          {
+            comment: comment,
+            uid: auth.currentUser.uid,
+            createdAt: await timestamp,
+            karma: 0
+          }
+        ],
       };
 
       await ref.set(data);
       await toast.success('Comment posted!');
     }
-
+    await setTempComment(comment);
     await setComment("");
   };
 
@@ -93,19 +140,6 @@ export default function PostCommentSection({ post, postRef, comments }) {
 
     await setComment("");
     await toast.success('Comment Removed!');
-  }
-
-  const handleCommentInfo = async (uid) => {
-    const userDoc =  await getUserWithUid(uid);
-
-    if(userDoc) {
-      const user = userDoc.data();
-        return {
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-          username: user.username
-        } 
-    }
   }
 
   // validate length
@@ -143,32 +177,127 @@ export default function PostCommentSection({ post, postRef, comments }) {
     </Menu>
   );
 
+  const handleCommentInfo = async (uid) => {
+    const userDoc =  await getUserWithUid(uid);
+  
+    if(userDoc) {
+      const user = userDoc.data();
+        return {
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          username: user.username
+        } 
+    } else {
+      return null;
+    }
+  }
+
+  useEffect(() => {
+    comments?.map(async (c) => {
+      const user = await handleCommentInfo(c.uid)
+      setModifiedComments(prev =>
+        [
+          {
+            comment: c,
+            user: user || null
+          },
+          ...prev
+        ]
+      );
+    });
+  }, [value]);
+
+
   return (
     <>  
-    <Toaster />   
-    {comments?.map((c, key) => {
-      // const test = handleCommentInfo(c.uid);
-      // setQuery(test);
-      return (      
-          <Card className={classes.card} key={key} >
+    <Toaster /> 
+    <Divider variant="middle" className={classes.divider} />
+    {console.log(modifiedComments)}
+    {modifiedComments?.map((c, key) => {
+      if(karmaCheck(c.comment.karma)) {
+
+          Object.keys(c.comment.comment).map(test => {
+            if(c.comment.comment[test].length > 1) {
+              console.log(c.comment.comment[test])
+            }
+          });
+        
+        return (      
+            <Card className={classes.card} key={key} >
+              <CardContent>
+                <div className={classes.commentCard}>
+                  <div className={classes.commentContent}>
+                    <Link href={`/users/${c.user?.username || '/home'}`} >
+                      <Avatar 
+                        className={classes.avatar} 
+                        src={c.user?.photoURL || '/static/images/avatar_6.png'}
+                      />
+                    </Link>
+                    <div>
+                      <div className={classes.titleContainer}>
+                        <Link href={`/users/${c.user?.username || '/home'}`}>
+                          <Typography
+                            variant="body2"
+                            gutterBottom
+                            dangerouslySetInnerHTML={createMarkup(c.user?.displayName || null)}
+                            className={classes.titleText}
+                          />
+                        </Link>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                          {c.comment.createdAt ? timeSince(c.comment.createdAt) : '...' }
+                        </Typography>
+                      </div>
+                      <Typography
+                        variant="body2"
+                        gutterBottom
+                        dangerouslySetInnerHTML={createMarkup(c.comment.comment)}
+                        className={classes.commentText}
+                      />
+                    </div>
+                  </div>
+                    <IconButton 
+                    aria-label="options"
+                    aria-controls={menuId}
+                    onClick={handleMenuOpen}
+                    aria-haspopup="true"
+                    >
+                    <MoreVertIcon />
+                  </IconButton>
+                </div>
+              </CardContent>
+            </Card> 
+        );  
+      }})
+    || "No comments yet!"}
+      {tempComment && (      
+          <Card className={classes.card}>
             <CardContent>
               <div className={classes.commentCard}>
                 <div className={classes.commentContent}>
-                  <Avatar 
-                    className={classes.small} 
-                    src={'/static/images/avatar_6.png'}
-                  />
-                  <div>
-                    <Typography
-                      variant="body2"
-                      gutterBottom
-                      dangerouslySetInnerHTML={createMarkup(query)}
-                      className={classes.commentText}
+                  <Link href={`/users/${joinUserName(auth.currentUser.displayName)}`} >
+                    <Avatar 
+                      className={classes.avatar} 
+                      src={auth.currentUser.photoURL || '/static/images/avatar_6.png'}
                     />
+                  </Link>
+                  <div>
+                    <div className={classes.titleContainer}>
+                      <Link href={`/users/${joinUserName(auth.currentUser.displayName)}`}>
+                        <Typography
+                          variant="body2"
+                          gutterBottom
+                          dangerouslySetInnerHTML={createMarkup(auth.currentUser.displayName)}
+                          className={classes.titleText}
+                        />
+                      </Link>
+                      <Typography variant="body2" color="textSecondary" component="p">
+                        {timeSince(Date.now()) || '...'}
+                      </Typography>
+                    </div>
                     <Typography
                       variant="body2"
                       gutterBottom
-                      dangerouslySetInnerHTML={createMarkup(c.comment)}
+                      dangerouslySetInnerHTML={createMarkup(tempComment)}
                       className={classes.commentText}
                     />
                   </div>
@@ -184,9 +313,8 @@ export default function PostCommentSection({ post, postRef, comments }) {
               </div>
             </CardContent>
           </Card> 
-      );  
-    })
-    || "No comments yet!"}
+        )  
+      }
     <form onSubmit={addComment}>
       <TextField
         variant="outlined"

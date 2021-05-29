@@ -7,7 +7,7 @@ import Page from '../../../components/shared/Page';
 import Dashboard from '../../../layouts/DashboardLayout/Dashboard';
 import Link from '../../../components/shared/Link';
 import PostFeed from '../../../components/community-news/PostFeed';
-import { firestore, fromMillis, postToJSON } from '../../../firebase/firebase';
+import { firestore, fromMillis, postToJSON, getUserWithUid } from '../../../firebase/firebase';
 import LoadingSpinner from '../../../components/shared/LoadingSpinner';
 import {
   Box,
@@ -67,7 +67,6 @@ export async function getServerSideProps(context) {
     // .limit(LIMIT);
 
   const comments = (await commentsQuery.get()).docs.map(postToJSON);
-  
 
   return {
     props: { posts, comments }, // will be passed to the page component as props
@@ -79,8 +78,8 @@ function Feed(props) {
   const [posts, setPosts] = useState(props.posts);
   const [comments, setComments] = useState(props.comments)
   const [loading, setLoading] = useState(false);
-
   const [postsEnd, setPostsEnd] = useState(false);
+  console.log(comments)
   const getMorePosts = async () => {
     setLoading(true);
     const last = posts[posts.length - 1];
