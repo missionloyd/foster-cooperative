@@ -102,7 +102,7 @@ function PostHeartManager({ post }) {
     </>
   );
 }
-function PostCommentManager({ post, comments, onCommentUpdate }) {
+function PostCommentManager({ post, comments, onCommentUpdate, commentCount }) {
   const postRef = firestore.collection('users').doc(post?.uid).collection('posts').doc(post?.slug);
   // const commentsRef = postRef.collection('comments').doc('comments');
   // const [commentsDoc] = useDocument(commentsRef);
@@ -116,6 +116,7 @@ function PostCommentManager({ post, comments, onCommentUpdate }) {
         postRef={postRef}
         comments={comments}
         onCommentUpdate={onCommentUpdate}
+        commentCount={commentCount}
       />
       </div>
     )}
@@ -243,7 +244,7 @@ export default function Post({ post, comments, admin = false }) {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <PostCommentManager post={post} comments={comments} onCommentUpdate={setCommentCount} />
+            <PostCommentManager post={post} comments={comments} onCommentUpdate={setCommentCount} commentCount={commentCount} />
           </CardContent>
       </Collapse>
       </Card>
