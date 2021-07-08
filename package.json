@@ -39,7 +39,8 @@
     "react-leaflet": "^3.1.0",
     "styled-components": "^5.3.0",
     "swr": "^0.5.5",
-    "unsplash-js": "^7.0.10"
+    "unsplash-js": "^7.0.10",
+    "uuid": "^8.3.2"
   },
   "browser": {
     "child_process": false

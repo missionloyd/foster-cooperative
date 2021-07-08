@@ -33,12 +33,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const mainFeaturedPost = {
-  title: 'Welcome to Foster Arizona\'s Newest Platform',
+  title: 'Welcome to Foster Cooperative',
   description:
-    "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting about our new website.",
+    "Our mission is to empower champions of at-risk children to positively impact the children they love and care for.",
   image: '',
   imgText: 'main image description',
-  // linkText: 'Continue reading…',
+  //linkText: 'Continue reading…',
 };
 
 const featuredPosts = [

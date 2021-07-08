@@ -24,6 +24,7 @@ import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
 import { timeSince } from '../../util/timeSince';
 import Divider from '@material-ui/core/Divider';
 import { joinUserName } from "../../util/join-user-name";
+import { v4 as uuidv4 } from 'uuid';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -42,6 +43,11 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     marginLeft: '0.8rem',
+  },
+  commentPrompt: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   titleText: {
     display: 'flex',
@@ -77,8 +83,9 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
   const router = useRouter();
   const classes = useStyles();
   const { username } = useContext(UserContext);
-  const ref = firestore.collection('users').doc(post.uid).collection('posts').doc(post.slug).collection('comments').doc(auth.currentUser.uid);  
-  const commentRef = postRef.collection('comments').doc(auth.currentUser.uid);
+  const commentUid = uuidv4();
+  const ref = firestore.collection('users').doc(post.uid).collection('posts').doc(post.slug).collection('comments').doc(commentUid);  
+  const commentRef = postRef.collection('comments').doc(selected);
   const [commentDoc] = useDocument(commentRef);
   const [comment, setComment] = useState('');
   const [modifiedComments, setModifiedComments] = useState([]);
@@ -99,28 +106,19 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
     e.preventDefault();
     let data = null;
 
-    if(commentDoc?.exists) {
-      data = {
-        uid: auth.currentUser.uid,
-        comment: firebase.firestore.FieldValue.arrayUnion(comment),
-        updatedAt: serverTimestamp(),
-        snapshots: firebase.firestore.FieldValue.arrayUnion((await firebase.firestore.Timestamp.fromDate(new Date()).toDate().toString())),
-      }
+    // create new field of type string array
+    data = {
+      comment: comment,
+      uid: auth.currentUser.uid,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      //snapshots: [(await firebase.firestore.Timestamp.fromDate(new Date()).toDate().toString())],
+      key: commentUid,
+      karma: 0
+    };
 
-      await commentRef.update(data);
-    } else {
-      // create new field of type string array
-      data = {
-        comment: [comment],
-        uid: auth.currentUser.uid,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        snapshots: [(await firebase.firestore.Timestamp.fromDate(new Date()).toDate().toString())],
-        karma: 0
-      };
-
-      await ref.set(data);
-    }
+    await ref.set(data);
+    
 
     // increment commentCount (firebase)
     const batch = firestore.batch();
@@ -128,51 +126,18 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
     await batch.commit();
 
     handleCommentCountIncrease();
+    let tempArray = modifiedComments;
+    const user = await handleCommentInfo(auth.currentUser.uid);
 
-    if(commentDoc?.exists) {
-      let key1,key2 = null;
-      const keyArray = await modifiedComments?.map((c, k) => {
-        console.log(c);
-        if(username === c.user.username) {
-          key1 = k;
-          console.log(key1);
+    tempArray.push({
+      admin: true,
+      comment: data,
+      user: user || null
+    });
 
-          return c.comment.comment.map((j, key) => {
-            console.log("j:" + j);
+    await setCommentsRoot(tempArray);
+    //console.log(modifiedComments);
 
-            if(j[key === null]) {
-              key2 = key;
-              return key;
-            }
-          });
-        }
-      });
-      let tempArray = modifiedComments;
-      let del1 = tempArray[key1].comment.comment.push(comment);
-      let del2 = tempArray[key1].comment.snapshots.push(Date.now());
-      await setModifiedComments(tempArray);
-    } else {
-      let tempArray = [];
-      // create new field of type string array
-      data = {
-        admin: true,
-        comment: 
-          {
-            comment: [comment],
-            createdAt: serverTimestamp(),
-            karma: 0,
-            snapshots: [(await firebase.firestore.Timestamp.fromDate(new Date()).toDate().toString())],
-            uid: auth.currentUser.uid,
-            updatedAt: serverTimestamp(),
-          },
-        user: await handleCommentInfo(auth.currentUser.uid) 
-      };
-      tempArray.push(data);
-      await setModifiedComments(tempArray);
-    }
-
-    // console.log(await comments)
-    // console.log(await modifiedComments)
     await setComment("");
     await toast.success('Comment posted!');
   };
@@ -194,58 +159,52 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
   // remove a user-to-post relationship
   const removeComment = async (e) => {
     e.preventDefault();
-    console.log(commentCardRef);
 
-    //remove comment and snapchot from array
-    if(commentDoc?.exists && await delComment.length - offset > 1) {
-      commentRef.update({
-        //update
-        comment: firebase.firestore.FieldValue.arrayRemove(await delComment?.comment),
-        snapshots: firebase.firestore.FieldValue.arrayRemove(await delComment?.snapshot)
-      });
-    } // remove a user-to-comment relationship 
-    else {
-      const batch = firestore.batch();
-      batch.delete(commentRef);
-      await batch.commit();
-    }
-
-    // increment commentCount (firebase)
+    // delete comment doc
     const batch = firestore.batch();
+    const delRef = postRef.collection('comments').doc(selected);
+    batch.delete(delRef);
+    
+    // increment commentCount
     batch.update(postRef, { commentCount: increment(-1) });
     await batch.commit();
 
     handleCommentCountDecrease();
 
-    await setComment("");
-
-    let key1,key2 = null;
-    const keyArray = await modifiedComments?.map((c, k) => {
-      key1 = k;
-      return c.comment.comment.map((j, key) => {
-        if(j === delComment.comment) {
-          key2 = key;
-          return key;
-        }
-      });
+    // find index of selected comment
+    modifiedComments?.map((c, key) => {
+      if(c.comment.key === selected) {
+        modifiedComments.splice(key, 1);
+      }
     });
-    //console.log('key1: ' + key1 + ' key2: '+ key2)
-    //console.log(modifiedComments[key1].comment.comment[key2]);
 
-    let tempArray = modifiedComments;
-    let del1 = tempArray[key1].comment.comment.splice(key2,1);
-    let del2 = tempArray[key1].comment.snapshots.splice(key2,1);
-    await setModifiedComments(tempArray);
-
+    await setModifiedComments(modifiedComments);
+    await setComment("");
     await toast.success('Comment Removed!');
-  }
+  };
+
+  const flagComment = async (e) => {
+    e.preventDefault();
+
+    // flagged comment doc
+    const batch = firestore.batch();
+    const flagRef = postRef.collection('comments').doc(selected);
+
+    // decrement karma
+    batch.update(flagRef, { karma: increment(-1) });
+    await batch.commit();
+    await toast('Comment Flagged!', {
+      icon: '🚩',
+    });
+  };
 
   // validate length
-  const isValid = comment.length > 3 && comment.length < 100;
+  const isValid = comment.length > 0 && comment.length < 100;
 
   // menu handlers
-  const handleMenuOpen = (event) => {
+  const handleMenuOpen = (event, key) => {
     setAnchorEl(event.currentTarget);
+    setSelected(key);
   };
 
   const handleMenuClose = () => {
@@ -256,10 +215,20 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
     setModifiedComments(prev => [...prev]);
   };
 
-  const handleAdminMenuOpen = (e, comment, snapshot, length) => {
+  const handleAdminMenuOpen = (e, key) => {
     setAdminAnchorEl(e.currentTarget);
-    setSelected(commentCardRef.current);
-    setDelComment({comment, snapshot, length});
+    setSelected(key);
+  };
+
+  const connect = (e) => {
+    e.preventDefault();
+    let userName = modifiedComments.map((c, key) => {
+      if(c.comment.key === selected) {
+        console.log(c.user.username);
+        return c.user.username;
+      }
+    }).join('');
+    router.push(`/users/${userName}`);
   };
 
   const menuId = 'menu';
@@ -278,7 +247,7 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
     >
       <a>
         <Link href='/user/profile'>
-          <MenuItem style={{color: '#515fa8'}}>
+          <MenuItem style={{color: '#515fa8'}} onClick={e => connect(e)}>
             <AccountTreeOutlinedIcon />
             <span className={classes.spacer}></span>
             <p>Connect</p>
@@ -286,7 +255,7 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
         </Link>
 
         <Link href='/chat'>
-        <MenuItem style={{color: '#f44336'}}>
+        <MenuItem style={{color: '#f44336'}} onClick={e => flagComment(e)}>
           <FlagOutlinedIcon />
           <span className={classes.spacer}></span>
           <p>Flag Post</p>
@@ -311,7 +280,7 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
       onClick={handleMenuClose}
     >
       <a>
-        <MenuItem style={{color: '#f44336'}} onClick={removeComment}>
+        <MenuItem style={{color: '#f44336'}} onClick={e => removeComment(e)}>
           <DeleteForeverOutlinedIcon />
           <span className={classes.spacer}></span>
           <p>Delete</p>
@@ -328,7 +297,8 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
         return {
           displayName: user.displayName,
           photoURL: user.photoURL,
-          username: user.username
+          username: user.username,
+          uid: uid
         } 
     } else {
       return null;
@@ -337,8 +307,11 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
 
   useEffect(() => {
     commentsRoot?.map(async (c) => {
-      const user = await handleCommentInfo(c.uid);
+
+      let user = null;
       let admin = null;
+
+      user = await handleCommentInfo(c.uid);
 
       if(c.uid === auth.currentUser.uid){
         admin = true;
@@ -346,13 +319,14 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
       else {
         admin = false;
       }
+      
 
       setModifiedComments(prev =>
         [
           {
             comment: c,
-            user: user || null,
-            admin: admin,
+            user: user,
+            admin: admin,         
           },
           ...prev
         ]
@@ -365,9 +339,7 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
     <>  
     <Toaster /> 
     <Divider variant="middle" className={classes.divider} />
-    {modifiedComments?.map(c => {
-      //{console.log(modifiedComments)}
-        return c.comment.comment.map((j, key) => {
+    {modifiedComments?.map((c, key) => {
         if(karmaCheck(c.comment.karma)) {
         return (      
             <Card className={classes.card} key={key} ref={commentCardRef}>
@@ -391,13 +363,13 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
                           />
                         </Link>
                         <Typography variant="body2" color="textSecondary" component="p">
-                          {c.comment.createdAt ? timeSince(c.comment.snapshots[key]) : '...' }
+                          {c.comment.createdAt ? timeSince(c.comment.createdAt) : '...' }
                         </Typography>
                       </div>
                       <Typography
                         variant="body2"
                         gutterBottom
-                        dangerouslySetInnerHTML={createMarkup(j)}
+                        dangerouslySetInnerHTML={createMarkup(c.comment.comment)}
                         className={classes.commentText}
                       />
                     </div>
@@ -406,7 +378,7 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
                    <IconButton 
                       aria-label="options"
                       aria-controls={adminMenuId}
-                      onClick={e => handleAdminMenuOpen(e, j, c.comment.snapshots[key], c.comment.comment.length)}
+                      onClick={e => handleAdminMenuOpen(e, c.comment.key)}
                       aria-haspopup="true"
                       >
                       <MoreVertIcon />
@@ -415,7 +387,7 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
                     <IconButton 
                       aria-label="options"
                       aria-controls={menuId}
-                      onClick={handleMenuOpen}
+                      onClick={e => handleMenuOpen(e, c.comment.key)}
                       aria-haspopup="true"
                       >
                       <MoreVertIcon />
@@ -424,10 +396,17 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
                 </div>
               </CardContent>
             </Card> 
-        );  
-      }})
-    })
-    || "No comments yet!"}
+        )
+      };  
+    })}
+    {modifiedComments.length <= 0 && (
+      <Typography
+      variant="body1"
+      gutterBottom
+      className={classes.commentPrompt}>
+        No comments yet!
+      </Typography>
+    )}
     <form onSubmit={addComment}>
       <TextField
         variant="outlined"
