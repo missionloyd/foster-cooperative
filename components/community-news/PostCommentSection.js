@@ -85,11 +85,11 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
   const { username } = useContext(UserContext);
   const commentUid = uuidv4();
   const ref = firestore.collection('users').doc(post.uid).collection('posts').doc(post.slug).collection('comments').doc(commentUid);  
-  const commentRef = postRef.collection('comments').doc(selected);
-  const [commentDoc] = useDocument(commentRef);
+  // const commentRef = postRef.collection('comments').doc(selected);
+  // const [commentDoc] = useDocument(commentRef);
   const [comment, setComment] = useState('');
   const [modifiedComments, setModifiedComments] = useState([]);
-  const [value, setValue] = useState([]);
+  const [value, setValue] = useState(comments);
   const commentCardRef = useRef();
   const [selected, setSelected] = useState(null);
   const [delComment, setDelComment] = useState(null);
