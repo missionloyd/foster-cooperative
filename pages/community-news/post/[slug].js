@@ -76,7 +76,7 @@ function PostManager() {
   );
 }
 
-function PostForm({ defaultValues, postRef, preview }){
+function PostForm({ postRef, defaultValues, preview }){
   const classes = useStyles();
   const router = useRouter();
   const { register, handleSubmit, reset, setValue, watch, formState } = useForm({ defaultValues, mode: 'onChange' });
@@ -92,8 +92,6 @@ function PostForm({ defaultValues, postRef, preview }){
     });
 
     reset({ content, photoURL, published });
-
-    console.log(published);
 
     await toast.success('Post updated successfully!');
     await router.back();
@@ -125,7 +123,7 @@ function PostForm({ defaultValues, postRef, preview }){
       <Toaster />
       <Card>
         <CardHeader
-          title="New Post 📩"
+          title={defaultValues?.exists ? "New Post 📩" : "Edit Post 📩"}
           // titleTypographyProps={{variant:'h1' }}
         />
         <Divider />
@@ -144,8 +142,8 @@ function PostForm({ defaultValues, postRef, preview }){
                 variant="outlined"
                 defaultValue=""
                 multiline
-                rows={2}
-                rowsMax={10}
+                maxRows={10}
+                //rowsMin={2}
                 id="content"
                 name="content"
                 inputRef={contentRef}

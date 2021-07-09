@@ -7,6 +7,6 @@ export default function PostFeed({ posts, comments, admin }) {
         post={post} 
         comments={comments}
         key={post.slug}
-        admin={admin}
+        owner={post.uid}
     />) : null;
 }

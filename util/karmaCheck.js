@@ -1,5 +1,5 @@
 export function karmaCheck(karma) {
-  if(karma > -2) {
+  if(karma > -3) {
     return true;
   } else {
     return false

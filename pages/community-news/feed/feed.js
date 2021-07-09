@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-//import Pagination from '@material-ui/lab/Pagination';
-//import Post from '../../components/community-news/Post';
-import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
-import ResizableIconButton from '../../../components/community-news/ResizableIconButton';
 import Page from '../../../components/shared/Page';
 import Dashboard from '../../../layouts/DashboardLayout/Dashboard';
 import Link from '../../../components/shared/Link';
 import PostFeed from '../../../components/community-news/PostFeed';
 import { firestore, fromMillis, postToJSON, getUserWithUid } from '../../../firebase/firebase';
 import LoadingSpinner from '../../../components/shared/LoadingSpinner';
+import CreateNewPost from '../../../components/community-news/CreateNewPost';
 import {
   Box,
   Container,
@@ -35,6 +32,8 @@ const useStyles = makeStyles((theme) => ({
   feed: {
     display: 'flex',
     justifyContent: 'center',
+    flexDirection: 'column',
+    alignItems: 'center'
   },
   helpers: {
     display: 'flex',
@@ -79,6 +78,7 @@ function Feed(props) {
   const [comments, setComments] = useState(props.comments)
   const [loading, setLoading] = useState(false);
   const [postsEnd, setPostsEnd] = useState(false);
+
   const getMorePosts = async () => {
     setLoading(true);
     const last = posts[posts.length - 1];
@@ -122,11 +122,7 @@ function Feed(props) {
             <h1>Community News 👋</h1>
             <div className={classes.headerContainer}>
               <h1>New Post</h1>
-              <Link href={`/home`} passHref>
-                <ResizableIconButton size='large'>
-                  <AddCircleRoundedIcon />
-                </ResizableIconButton>
-              </Link>
+              <CreateNewPost />
             </div>
           </div>
           <div className={classes.feed}>

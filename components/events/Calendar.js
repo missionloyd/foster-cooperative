@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
 //import TableCell from '@material-ui/core/TableCell';
-import { darken, fade, lighten } from '@material-ui/core/styles/colorManipulator';
+import { darken, alpha, lighten } from '@material-ui/core/styles/colorManipulator';
 //import Typography from '@material-ui/core/Typography';
 import { ViewState, EditingState } from '@devexpress/dx-react-scheduler';
 //import classNames from 'clsx';
@@ -32,8 +32,8 @@ const resources = [{
 
 const getBorder = theme => (`1px solid ${
   theme.palette.type === 'light'
-    ? lighten(fade(theme.palette.divider, 1), 0.88)
-    : darken(fade(theme.palette.divider, 1), 0.68)
+    ? lighten(alpha(theme.palette.divider, 1), 0.88)
+    : darken(alpha(theme.palette.divider, 1), 0.68)
 }`);
 
 const DayScaleCell = props => (
@@ -59,10 +59,10 @@ const styles = theme => ({
       borderBottom: 'none',
     },
     '&:hover': {
-      backgroundColor: fade('#03B0b5', 0.15),
+      backgroundColor: alpha('#03B0b5', 0.15),
     },
     '&:focus': {
-      backgroundColor: fade('#03B0b5', 0.30),
+      backgroundColor: alpha('#03B0b5', 0.30),
       outline: 0,
     },
   },

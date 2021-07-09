@@ -66,15 +66,12 @@ const NotFound = () => {
                 <img
                   alt="Under development"
                   className={classes.image}
-                  //src="/static/images/undraw_page_not_found_su7k.svg"
-                  src="/static/images/spock.gif"
+                  src="/static/images/undraw_page_not_found_su7k.svg"
+                  //src="/static/images/spock.gif"
                 />
               </Box>
             </Container>
           </Box>
-          <button onClick={() => toast.success('Post updated successfully!'), console.log("test")}>
-              Click me!!
-          </button>
         </Page>
       );
 };

@@ -8,14 +8,13 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { Badge, Button, Grid, TextField } from '@material-ui/core';
-import { useDocument } from 'react-firebase-hooks/firestore';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Avatar from '@material-ui/core/Avatar';
-import toast, {Toaster} from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import Link from 'next/link';
 import { karmaCheck } from "../../util/karmaCheck";
 import moment from 'moment';
@@ -96,7 +95,7 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
   const [offset, setOffset] = useState(0);
   const [commentsRoot, setCommentsRoot] = useState(comments);
   const [count, setCount] = useState(commentCount);
-
+  
   const createMarkup = html => {
     return { __html: html }
   }
@@ -165,13 +164,13 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
     const delRef = postRef.collection('comments').doc(selected);
     batch.delete(delRef);
     
-    // increment commentCount
+    // decrement commentCount
     batch.update(postRef, { commentCount: increment(-1) });
     await batch.commit();
 
     handleCommentCountDecrease();
 
-    // find index of selected comment
+    // remove comment locally 
     modifiedComments?.map((c, key) => {
       if(c.comment.key === selected) {
         modifiedComments.splice(key, 1);
@@ -180,22 +179,51 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
 
     await setModifiedComments(modifiedComments);
     await setComment("");
-    await toast.success('Comment Removed!');
+    await toast('Comment Removed!', {
+      icon: '🗑️'
+    });
   };
 
+  // create a user-to-post relationship
   const flagComment = async (e) => {
     e.preventDefault();
 
     // flagged comment doc
+    const uid = auth.currentUser.uid;
     const batch = firestore.batch();
-    const flagRef = postRef.collection('comments').doc(selected);
+    const commentRef = postRef.collection('comments').doc(selected);
+    const flagRef = postRef.collection('comments')?.doc(selected).collection('flags').doc(auth.currentUser.uid);
 
-    // decrement karma
-    batch.update(flagRef, { karma: increment(-1) });
-    await batch.commit();
-    await toast('Comment Flagged!', {
-      icon: '🚩',
-    });
+    // work-around for useDocument
+    const docExists = await flagRef.get()
+      .then((snapshot) => {
+        if(snapshot.exists){
+          return true;
+        } else {
+          return false;
+        }
+      });
+
+    if(!docExists) {
+      // decrement karma
+      batch.update(commentRef, { karma: increment(-1) });
+      batch.set(flagRef, { uid });
+      await batch.commit();
+
+      // remove comment locally 
+      modifiedComments?.map((c, key) => {
+        if(c.comment.key === selected) {
+          modifiedComments.splice(key, 1);
+        }
+      });
+      await setModifiedComments(modifiedComments);
+
+      await toast('Comment Flagged!', {
+        icon: '🚩',
+      });
+    } else {
+      await toast.error('Comment Already Flagged!');
+    }
   };
 
   // validate length
@@ -224,7 +252,6 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
     e.preventDefault();
     let userName = modifiedComments.map((c, key) => {
       if(c.comment.key === selected) {
-        console.log(c.user.username);
         return c.user.username;
       }
     }).join('');
@@ -320,7 +347,6 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
         admin = false;
       }
       
-
       setModifiedComments(prev =>
         [
           {
@@ -340,6 +366,7 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
     <Toaster /> 
     <Divider variant="middle" className={classes.divider} />
     {modifiedComments?.map((c, key) => {
+      //console.log(c)
         if(karmaCheck(c.comment.karma)) {
         return (      
             <Card className={classes.card} key={key} ref={commentCardRef}>
