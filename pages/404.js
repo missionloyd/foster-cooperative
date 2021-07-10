@@ -7,8 +7,6 @@ import {
     makeStyles
 } from '@material-ui/core';
 import Page from '../components/shared/Page';
-import toast from 'react-hot-toast';
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,7 +64,7 @@ const NotFound = () => {
                 <img
                   alt="Under development"
                   className={classes.image}
-                  src="/static/images/undraw_page_not_found_su7k.svg"
+                  src="/static/images/not_found.png"
                   //src="/static/images/spock.gif"
                 />
               </Box>

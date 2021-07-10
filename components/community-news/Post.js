@@ -10,7 +10,6 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/ModeComment';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -22,13 +21,15 @@ import AccountTreeOutlinedIcon from '@material-ui/icons/AccountTreeOutlined';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
 import moment from 'moment';
-import { firestore, getUserWithUid, auth } from '../../firebase/firebase';
+import { firestore, getUserWithUid, auth, increment } from '../../firebase/firebase';
 import { useDocumentData, useDocument } from 'react-firebase-hooks/firestore';
 import HeartButton from '../../components/community-news/HeartButton';
 import PostCommentSection from './PostCommentSection';
 import { karmaCheck } from '../../util/karmaCheck';
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import toast, { Toaster } from 'react-hot-toast';
+import { timeSince } from '../../util/timeSince';
+import { reportUser } from '../../util/reportUser';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   spacer: {
-    marginRight: '0.2rem',
+    marginRight: '0.1rem',
   },
   color: {
     primary: theme.primary,
@@ -125,8 +126,9 @@ function PostCommentManager({ post, postRef, comments, onCommentUpdate, commentC
 
 export default function Post({ post, comments, owner }) {
   const classes = useStyles();
+  const router = useRouter();
   const postRef = firestore.collection('users').doc(post?.uid).collection('posts').doc(post?.slug);
-  const [selected, setSelected] = useState(null);
+  const [flag, setFlag] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [adminAnchorEl, setAdminAnchorEl] = useState(null);
@@ -145,18 +147,92 @@ export default function Post({ post, comments, owner }) {
 
   const handleMenuOpen = (e, key) => {
     setAnchorEl(e.currentTarget);
-    setSelected(key);
   };
 
   const handleAdminMenuOpen = (e, key) => {
     setAdminAnchorEl(e.currentTarget);
-    setSelected(key);
   };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
     setAdminAnchorEl(null);
-    setSelected(null);
+  };
+
+  function dateCheck() {
+    let output = '';
+    
+    if(post.updatedAt) {
+      const date = timeSince(post.updatedAt);
+
+      // if(post.createdAt !== post.updatedAt) {
+      //   output = 'Edited ';
+      // } else {
+      //   output = ''
+      // }
+
+      if(date.includes('y') || date.includes('mo') || date.includes('d')) {
+        output += moment(post.updatedAt).format('LL');
+      } else {
+        output += timeSince(post.updatedAt);
+      }
+    }
+
+    return output;
+  }
+
+  // create a user-to-post relationship
+  const flagPost = async (e, selected) => {
+    e.preventDefault();
+
+    // flagged post doc
+    const uid = auth.currentUser.uid;
+    const batch = firestore.batch();
+    const flagRef = postRef.collection('flags').doc(auth.currentUser.uid);
+
+    // work-around for useDocument
+    const docExists = await flagRef.get()
+      .then((snapshot) => {
+        if(snapshot.exists){
+          return true;
+        } else {
+          return false;
+        }
+      });
+
+    if(!docExists) {
+      // decrement karma
+      batch.update(postRef, { karma: increment(-1) });
+      batch.set(flagRef, { uid });
+      await batch.commit();
+
+      await toast('Post Reported!', {
+        icon: '🚩',
+      });
+      // exit 
+      setFlag(true);
+      reportUser(post.uid);
+    } else {
+      await toast.error('Comment Already Reported!');
+    }
+  };
+
+  const deletePost = async (e) => {
+    e.preventDefault();
+    //const router = useRouter();
+    const doIt = confirm('Are you sure?');
+    
+    if (doIt) {
+      await postRef.delete();
+      Router.reload(window.location.pathname);
+      toast('Post Removed!', {
+        icon: '🗑️'
+      });
+    }
+  };
+
+  const connect = (e) => {
+    e.preventDefault();
+    router.push(`/users/${post.userName}`);
   };
 
   const menuId = 'menu';
@@ -172,21 +248,17 @@ export default function Post({ post, comments, owner }) {
       onClick={handleMenuClose}
     >
       <a>
-        <Link href='/user/profile'>
-          <MenuItem style={{color: '#515fa8'}}>
-            <AccountTreeOutlinedIcon />
-            <span className={classes.spacer}></span>
-            <p>Connect</p>
-          </MenuItem>
-        </Link>
+        <MenuItem style={{color: '#515fa8'}} onClick={e => connect(e)}>
+          <AccountTreeOutlinedIcon />
+          <span className={classes.spacer}></span>
+          <p>Connect</p>
+        </MenuItem>
 
-        <Link href='/chat'>
-        <MenuItem style={{color: '#f44336'}}>
+        <MenuItem style={{color: '#f44336'}} onClick={e => flagPost(e, post.slug)}>
           <FlagOutlinedIcon />
           <span className={classes.spacer}></span>
-          <p>Flag Post</p>
+          <p>Report</p>
         </MenuItem>
-        </Link>
       </a>
     </Menu>
   );
@@ -211,7 +283,8 @@ export default function Post({ post, comments, owner }) {
             <p>Edit Post</p>
           </MenuItem>
         </Link>
-        <MenuItem style={{color: '#f44336'}} onClick={e => deletePost(e, postRef)}>
+
+        <MenuItem style={{color: '#f44336'}} onClick={e => deletePost(e)}>
           <DeleteForeverOutlinedIcon />
           <span className={classes.spacer}></span>
           <p>Delete</p>
@@ -220,7 +293,7 @@ export default function Post({ post, comments, owner }) {
     </Menu>
   );
 
-  return (karmaCheck(post.karma) && (
+  return (karmaCheck(post.karma) && !flag && (
     <React.Fragment>
       <Toaster />
       <Card className={classes.root}>
@@ -256,7 +329,8 @@ export default function Post({ post, comments, owner }) {
               <a className={classes.postTitle}>{user?.displayName || 'Anonymous User'} - Foster Parent since 2015</a>
             </Link>
           }
-          subheader={post.updatedAt ? moment(post.updatedAt).format('LLL') : '...'}
+          subheader={dateCheck()}
+          //subheader={post.updatedAt ? timeSince(post.updatedAt) : '...'}
       />
       {post?.photoURL && (
         <CardMedia
@@ -288,7 +362,7 @@ export default function Post({ post, comments, owner }) {
           <ExpandMoreIcon />
           </IconButton>
       </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
+      <Collapse in={expanded} timeout="auto">
           <CardContent>
             <PostCommentManager post={post} postRef= {postRef} comments={comments} onCommentUpdate={setCommentCount} commentCount={commentCount} />
           </CardContent>
@@ -300,18 +374,3 @@ export default function Post({ post, comments, owner }) {
     )
   );
 }
-
-const deletePost = async (e, { postRef }) => {
-  e.preventDefault();
-  //const router = useRouter();
-  const doIt = confirm('Are you sure?');
-  
-  if (doIt) {
-    await postRef.delete();
-    router.basePath('community-news');
-    toast('Comment Removed!', {
-      icon: '🗑️'
-    });
-    console.log("yes");
-  }
-};

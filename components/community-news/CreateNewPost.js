@@ -42,8 +42,7 @@ export default function CreateNewPost(){
     };
 
     await ref.set(data);
-
-    toast.success('Post created!');
+    //toast.success('Post created!');
 
     // Imperative navigation after doc is set
     router.push(`/community-news/post/${slug}`);

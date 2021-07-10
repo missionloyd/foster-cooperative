@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from "../../lib/context";
 import { firestore, auth, serverTimestamp, getUserWithUid, increment } from '../../firebase/firebase';
-import firebase from 'firebase/app'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
@@ -23,7 +22,9 @@ import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
 import { timeSince } from '../../util/timeSince';
 import Divider from '@material-ui/core/Divider';
 import { joinUserName } from "../../util/join-user-name";
-import { v4 as uuidv4 } from 'uuid';
+import Loader from '../shared/LoadingSpinner';
+import randomize from 'randomatic';
+import { reportUser } from '../../util/reportUser';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -75,26 +76,31 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     marginTop: '-1rem',
     marginBottom: '1rem'
+  },
+  spacer: {
+    marginRight: '0.1rem',
+  },
+  loader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 }))
 
 export default function PostCommentSection({ post, postRef, comments, onCommentUpdate, commentCount }) {
-  const router = useRouter();
   const classes = useStyles();
-  const { username } = useContext(UserContext);
-  const commentUid = uuidv4();
+  const router = useRouter();
+  //const { username } = useContext(UserContext);
+  const commentUid = randomize('0', 12);
   const ref = firestore.collection('users').doc(post.uid).collection('posts').doc(post.slug).collection('comments').doc(commentUid);  
-  // const commentRef = postRef.collection('comments').doc(selected);
-  // const [commentDoc] = useDocument(commentRef);
   const [comment, setComment] = useState('');
   const [modifiedComments, setModifiedComments] = useState([]);
   const [value, setValue] = useState(comments);
   const commentCardRef = useRef();
   const [selected, setSelected] = useState(null);
-  const [delComment, setDelComment] = useState(null);
-  const [offset, setOffset] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [commentsRoot, setCommentsRoot] = useState(comments);
-  const [count, setCount] = useState(commentCount);
+  let count = 0;
   
   const createMarkup = html => {
     return { __html: html }
@@ -113,7 +119,8 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
       updatedAt: serverTimestamp(),
       //snapshots: [(await firebase.firestore.Timestamp.fromDate(new Date()).toDate().toString())],
       key: commentUid,
-      karma: 0
+      karma: 0,
+      slug: post.slug
     };
 
     await ref.set(data);
@@ -144,14 +151,10 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
   // increment commentCount locally
   const handleCommentCountIncrease = useCallback(e => {
     onCommentUpdate(prev => prev + 1);
-    setCount(prev => prev + 1);
-    setOffset(prev => prev - 1);
   }, [onCommentUpdate]);
 
   const handleCommentCountDecrease = useCallback(e => {
     onCommentUpdate(prev => prev - 1);
-    setCount(prev => prev - 1);
-    setOffset(prev => prev + 1);
   }, [onCommentUpdate]);
   
 
@@ -211,18 +214,19 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
       await batch.commit();
 
       // remove comment locally 
-      modifiedComments?.map((c, key) => {
+      const key = modifiedComments?.filter((c, key) => {
         if(c.comment.key === selected) {
           modifiedComments.splice(key, 1);
+            return c.comment.uid
         }
-      });
+      })[0];
       await setModifiedComments(modifiedComments);
-
-      await toast('Comment Flagged!', {
+      await reportUser(key?.comment.uid);
+      await toast('Comment Reported!', {
         icon: '🚩',
       });
     } else {
-      await toast.error('Comment Already Flagged!');
+      await toast.error('Comment Already Reported!');
     }
   };
 
@@ -239,7 +243,6 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
     setAnchorEl(null);
     setAdminAnchorEl(null);
     setSelected(null);
-    setDelComment(null);
     setModifiedComments(prev => [...prev]);
   };
 
@@ -273,21 +276,17 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
       onClick={handleMenuClose}
     >
       <a>
-        <Link href='/user/profile'>
-          <MenuItem style={{color: '#515fa8'}} onClick={e => connect(e)}>
-            <AccountTreeOutlinedIcon />
-            <span className={classes.spacer}></span>
-            <p>Connect</p>
-          </MenuItem>
-        </Link>
+        <MenuItem style={{color: '#515fa8'}} onClick={e => connect(e)}>
+          <AccountTreeOutlinedIcon />
+          <span className={classes.spacer}></span>
+          <p>Connect</p>
+        </MenuItem>
 
-        <Link href='/chat'>
         <MenuItem style={{color: '#f44336'}} onClick={e => flagComment(e)}>
           <FlagOutlinedIcon />
           <span className={classes.spacer}></span>
-          <p>Flag Post</p>
+          <p>Report</p>
         </MenuItem>
-      </Link>
       </a>
     </Menu>
   );
@@ -360,14 +359,21 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
     });
   }, [value]);
 
+  function validateComment(karma, commentUidRecord, postUidRecord) {
+    if(karmaCheck(karma) && commentUidRecord === postUidRecord) {
+      count++;
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   return (
     <>  
     <Toaster /> 
     <Divider variant="middle" className={classes.divider} />
     {modifiedComments?.map((c, key) => {
-      //console.log(c)
-        if(karmaCheck(c.comment.karma)) {
+        if(validateComment(c.comment.karma, c.comment.slug, post.slug)) {
         return (      
             <Card className={classes.card} key={key} ref={commentCardRef}>
               <CardContent>
@@ -426,7 +432,10 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
         )
       };  
     })}
-    {modifiedComments.length <= 0 && (
+    <div className={classes.loader}>
+      <Loader show={loading} />
+    </div>
+    {!loading && post.commentCount === 0 && count === 0 &&(
       <Typography
       variant="body1"
       gutterBottom

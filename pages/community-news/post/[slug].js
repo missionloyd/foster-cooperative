@@ -82,6 +82,7 @@ function PostForm({ postRef, defaultValues, preview }){
   const { register, handleSubmit, reset, setValue, watch, formState } = useForm({ defaultValues, mode: 'onChange' });
   const { isValid, isDirty } = formState;
   const [ photoURL, setPhotoURL ] = useState('');
+  const [ mode, setMode ] = useState(false);
 
   const updatePost = async ({ content, photoURL, published }) => {
     await postRef.update({
@@ -114,6 +115,10 @@ function PostForm({ postRef, defaultValues, preview }){
   // publish
   const { ref: publishedRef, ...publishedProps} = register("published");
 
+  if(defaultValues?.content === '' && !mode) {
+    setMode(true);
+  }
+
   return (
     <form
       autoComplete="off"
@@ -122,10 +127,17 @@ function PostForm({ postRef, defaultValues, preview }){
     >
       <Toaster />
       <Card>
-        <CardHeader
+        {/* <CardHeader
           title={defaultValues?.exists ? "New Post 📩" : "Edit Post 📩"}
           // titleTypographyProps={{variant:'h1' }}
-        />
+        /> */}
+        <Container>
+          {mode && (
+            <h1>Create Post 📩</h1>
+          ) ||
+            <h1>Edit Post 📩</h1>
+          }
+        </Container>
         <Divider />
         <CardContent>
           <Grid

@@ -9,7 +9,7 @@ export function timeSince(date) {
   } else {
     interval = Math.floor(seconds / 2592000);
     if (interval >= 1) {
-      intervalType = 'm';
+      intervalType = 'mo';
     } else {
       interval = Math.floor(seconds / 86400);
       if (interval >= 1) {
