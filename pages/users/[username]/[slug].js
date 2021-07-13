@@ -1,7 +1,7 @@
 import PublicUserProfilePage from './index.js';
 import PostFeed from '../../../components/community-news/PostFeed';
 import { UserContext } from '@lib/context';
-import { firestore, getUserWithUsername, postToJSON } from '../../firebase/firebase';
+import { firestore, getUserWithUsername, postToJSON } from '../../../firebase/firebase';
 import Link from 'next/link';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { useContext } from 'react';
