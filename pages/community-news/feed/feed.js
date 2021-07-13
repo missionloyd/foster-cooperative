@@ -33,7 +33,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    //maxWidth: '90%'
   },
   helpers: {
     display: 'flex',
@@ -59,6 +60,7 @@ export async function getServerSideProps(context) {
 
   const posts = (await postsQuery.get()).docs.map(postToJSON);
 
+  // update where for community id
   const commentsQuery = firestore
     .collectionGroup('comments')
     //.where('karma', '>=', 0)

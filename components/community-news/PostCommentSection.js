@@ -21,10 +21,10 @@ import AccountTreeOutlinedIcon from '@material-ui/icons/AccountTreeOutlined';
 import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
 import { timeSince } from '../../util/timeSince';
 import Divider from '@material-ui/core/Divider';
-import { joinUserName } from "../../util/join-user-name";
 import Loader from '../shared/LoadingSpinner';
 import randomize from 'randomatic';
-import { reportUser } from '../../util/reportUser';
+import { karmaManager } from '../../util/karmaManager';
+import { queries } from '../../util/queries';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -221,7 +221,7 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
         }
       })[0];
       await setModifiedComments(modifiedComments);
-      await reportUser(key?.comment.uid);
+      await karmaManager(key?.comment.uid, -1);
       await toast('Comment Reported!', {
         icon: '🚩',
       });
@@ -324,7 +324,8 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
           displayName: user.displayName,
           photoURL: user.photoURL,
           username: user.username,
-          uid: uid
+          id: user.id,
+          uid: user.uid,
         } 
     } else {
       return null;
@@ -379,7 +380,7 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
               <CardContent>
                 <div className={classes.commentCard}>
                   <div className={classes.commentContent}>
-                    <Link href={`/users/${c.user?.username || '/home'}`} >
+                    <Link href={queries({user: c.user?.username, id: c.user?.id}, 0)} >
                       <Avatar 
                         className={classes.avatar} 
                         src={c.user?.photoURL || '/static/images/avatar_6.png'}
@@ -387,7 +388,7 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
                     </Link>
                     <div>
                       <div className={classes.titleContainer}>
-                        <Link href={`/users/${c.user?.username || '/home'}`}>
+                        <Link href={queries({user: c.user?.username, id: c.user?.id}, 0)}>
                           <Typography
                             variant="body2"
                             gutterBottom

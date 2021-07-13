@@ -1,8 +1,10 @@
+import { serverTime } from '../firebase/firebase';
+
 export function timeSince(date) {
   date = new Date(date);
-  const seconds = Math.floor((new Date() - date) / 1000);
+  const seconds = Math.floor((new Date(serverTime) - date) / 1000);
   let intervalType;
-
+  
   let interval = Math.floor(seconds / 31536000);
   if (interval >= 1) {
     intervalType = 'y';

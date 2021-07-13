@@ -1,6 +1,5 @@
-
 import React, { useEffect, useState, useCallback, useContext } from 'react';
-import { auth, firestore, googleAuthProvider } from '../firebase/firebase';
+import { auth, firestore, getUserWithUsernameID, storage, STATE_CHANGED } from '../../firebase/firebase';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -11,22 +10,21 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Copyright from '../components/shared/Copyright';
-import { UserContext } from '../lib/context';
+import Copyright from '../../components/shared/Copyright';
+import { UserContext } from '../../lib/context';
 //import { useForm } from '../lib/hooks/form-hook';
-import { useHttpClient } from '../lib/hooks/http-hook';
+import { useHttpClient } from '../../lib/hooks/http-hook';
 // import InputField from '../components/shared/FormElements/InputField';
-import fetcher from '../lib/fetcher';
+import fetcher from '../../lib/fetcher';
 import useSWR from 'swr';
-import {
-  VALIDATOR_EMAIL,
-  VALIDATOR_MINLENGTH,
-  VALIDATOR_REQUIRE
-} from '../components/shared/util/validators';
 import Router from 'next/router';
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
-import LinearDeterminate from '../components/shared/FormElements/LinearDeterminate';
-import statesData from '../data/states-array.json';
+import { Container, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
+import LinearDeterminate from '../../components/shared/FormElements/LinearDeterminate';
+import statesData from '../../data/states-array.json';
+import { avatarGenerator } from '../../util/avatarGenerator';
+import toast, { Toaster } from 'react-hot-toast';
+import AdminCheck from '../../components/auth/AdminCheck';
+import Loader from '../../components/shared/LoadingSpinner.js';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,8 +50,8 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       cursor: 'pointer'
     },
-    height: '4rem',
-    width: '4rem'
+    height: '6rem',
+    width: '6rem'
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -108,82 +106,189 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export async function getServerSideProps({ query }) {
+  const username = query.user;
+  const id  = query.id;
+
+  const userDoc = await getUserWithUsernameID(username, id);
+
+  // If no user, short circuit to 404 page
+  if (!userDoc) {
+    return {
+      notFound: true,
+    };
+  }
+
+  // JSON serializable data
+  let user = null;
+
+  if (userDoc) {
+    user = userDoc.data();
+  }
+
+  return {
+    props: { user },
+  };
+}
 
 // Username form
-export default function NextSteps() {
-  const { user } = useContext(UserContext);
+export default function NextSteps({ user }) {
+  //const { user } = useContext(UserContext);
   const classes = useStyles();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [role, setRole] = useState('');
   const [city, setCity] = useState('');
+  const [newRole, setNewRole] = useState(false);
+  const [customRole, setCustomRole] = useState('');
   const [state, setState] = useState('');
   const [formState, setformState] = useState(25);
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [downloadURL, setDownloadURL] = useState(null);
+  const [photoUrl, setPhotoUrl] = useState(user?.photoURL);
 
-  const { data } = useSWR('/api/unsplash', fetcher);
-  const url = (data?.result.response.urls.regular || 'https://source.unsplash.com/random');
+  // background image
+  // const { backgroundData } = useSWR('/api/unsplash', fetcher);
+  // const backgroundUrl = (backgroundData?.result.response.urls.regular || 'https://source.unsplash.com/random');
+  const backgroundUrl = '';
+
+  // random avatar generator
+  const avatarUrl = avatarGenerator(user?.uid);
 
   const authSubmitHandler = async (e) => {     
     e.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append('email', formState.inputs.email.value);
-      formData.append('name', formState.inputs.fname.value + " " + formState.inputs.lname.value);
-      formData.append('password', formState.inputs.password.value);
-      const responseData = await sendRequest(
-        'http://localhost:5000/api/users/signup',
-        'POST',
-        formData
-      );
-      defaultAuth.login(responseData.userId, responseData.token);
-      Router.push('/');
-    } catch (err) {}
-    
+    Router.push('/');
   }
 
   const handleRoleChange = (e) => {
-    setRole(e.target.value);
-    if (role == '') {
+    const val = e.target.value;
+    if(val !== 'Other...') {
+      if((role === '' || role === 'Other...') && customRole === '') {
+        setformState(formState + 25);
+      }
+      setCustomRole('');
+      setRole(val);
+      setNewRole(false);
+    } else {
+      setRole('Other...');
+      setNewRole(true);
+      if(formState !== 25) {
+        setformState(formState - 25);
+      }
+    }
+  };
+
+  const handleCustomRoleChange = (e) => {
+    const val = e.target.value;
+    setCustomRole(val);
+    if (customRole === '') {
       setformState(formState + 25);
+      
+    } else if(val.length === 0){
+      setformState(formState - 25);
     }
   };
 
   const handleStateChange = (e) => {
     setState(e.target.value);
-    if (state == '') {
+    if (state === '') {
       setformState(formState + 25);
     }
   };
 
   const handleCityChange = (e) => {
-    setCity(e.target.value);
-    if (city == '') {
+    const val = e.target.value;
+    setCity(val);
+    if (city === '') {
       setformState(formState + 25);
+      
+    } else if(val.length === 0){
+      setformState(formState - 25);
     }
   };
 
-  const handleSubmit = () => {
-    console.log(
-      "Role: " + role + 
-      " City: " + city + 
-      " State: " + state
-    );
-    Router.push('/');
+  // Creates a Firebase Upload Task
+  const uploadFile = async (e) => {
+    // Get the file
+    const file = Array.from(e.target.files)[0];
+    const extension = file.type.split('/')[1];
+
+    // Makes reference to the storage bucket location
+    const ref = storage.ref(`profilePictures/${auth.currentUser.uid}/${Date.now()}.${extension}`);
+    setUploading(true);
+
+    // Starts the upload
+    const task = ref.put(file);
+
+    // Listen to updates to upload task
+    task.on(STATE_CHANGED, (snapshot) => {
+      const pct = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(0);
+      setProgress(pct);
+
+      // Get downloadURL AFTER task resolves (Note: this is not a native Promise)
+      task
+        .then((d) => ref.getDownloadURL())
+        .then((url) => {
+          setDownloadURL(url);
+          setPhotoUrl(url);
+          setUploading(false);
+        });
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const userRef = firestore.collection('users').doc(user?.uid);
+    const batch = firestore.batch();
+
+    batch.update(userRef, {
+      role: role,
+      city: city,
+      state: state,
+      photoURL: photoUrl
+    });
+
+    await batch.commit();
+
+    await toast.success('Profile Updated!');
+    await Router.push('/home');
   }
 
   return (
     (
-      <section>
+      <AdminCheck user={user}>
+        <Toaster />
         <Grid container component="main" className={classes.root}>
           <CssBaseline />
-          <Grid item xs={false} sm={4} md={7} className={classes.image} style={{ backgroundImage: `url(${url})` }}/>
+          <Grid item xs={false} sm={4} md={7} className={classes.image} style={{ backgroundImage: `url(${backgroundUrl})` }}/>
           <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
             <div className={classes.paper}>
-                <Avatar   
-                  aria-label="user" 
-                  className={classes.avatar}
-                  src={user?.photoURL || '/static/images/anonymous.png'}
-                >
-                </Avatar>
+              <Loader show={uploading} />
+              {!uploading && (
+                <>
+                  <input 
+                    type="file" 
+                    onChange={uploadFile} 
+                    accept="image/x-png,image/gif,image/jpeg" 
+                    hidden 
+                    id="profile-picture"
+                    multiple
+                  />
+                  <label htmlFor="profile-picture">
+                    <IconButton component="span">
+                      <Avatar   
+                        className={classes.avatar}
+                        src={(downloadURL && !uploading) ? downloadURL : user?.photoURL || avatarUrl}
+                        //src={avatarUrl}
+                        //onClick={uploadFile}
+                        //id="profile-picture"
+                      >
+                      </Avatar>
+                    </IconButton>
+                  </label>
+                </>
+              )}
               <Typography component="h1" variant="h5">
                 Next Steps
               </Typography>
@@ -199,19 +304,32 @@ export default function NextSteps() {
                           labelId="outlined-label"
                           id="role"
                           value={role}
-                          onChange={handleRoleChange}
+                          onChange={e => handleRoleChange(e)}
                           label="Role"
                         >
-                          <MenuItem value="">
+                          {/* <MenuItem value="Other" onClick={e => handleRoleChange(e, 'Other...')}>
                             <em>Other...</em>
-                          </MenuItem>
-                          <MenuItem value={'Caregiver'}>Caregiver</MenuItem>
+                          </MenuItem> */}
                           <MenuItem value={'Foster Parent'}>Foster Parent</MenuItem>
+                          <MenuItem value={'Caregiver'}>Caregiver</MenuItem>
                           <MenuItem value={'Birth Parent'}>Birth Parent</MenuItem>
                           <MenuItem value={'Case Worker'}>Case Worker</MenuItem>
+                          <MenuItem value={'Other...'}>Other...</MenuItem>
                         </Select>
                       </FormControl>
                   </Grid>
+                  {newRole && (
+                          <TextField 
+                            variant="outlined"
+                            margin="normal"
+                            id="custom-role"
+                            label="Custom Role"
+                            name="role"
+                            fullWidth
+                            required
+                            onChange={e => handleCustomRoleChange(e)}
+                          />
+                      )}
                   <Grid container spacing={2}>
                       <Grid item xs={12} sm={6}>
                         <TextField
@@ -222,7 +340,7 @@ export default function NextSteps() {
                           label="City"
                           value={city}
                           helperText="Please enter a valid city"
-                          validators={[VALIDATOR_REQUIRE()]}
+                          //validators={[VALIDATOR_REQUIRE()]}
                           onChange={handleCityChange}
                         />
                       </Grid>
@@ -252,7 +370,7 @@ export default function NextSteps() {
                   </Grid>
                   <Grid item>
                     <Button 
-                      onClick={handleSubmit} 
+                      onClick={e => handleSubmit(e)} 
                       variant="contained" 
                       className={classes.button}
                       disabled={formState != 100 || city == ''}
@@ -268,7 +386,7 @@ export default function NextSteps() {
             </div>
           </Grid>
         </Grid>
-      </section>
+      </AdminCheck>
     )
   );
 }

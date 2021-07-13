@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -29,7 +29,9 @@ import { karmaCheck } from '../../util/karmaCheck';
 import Router, { useRouter } from 'next/router';
 import toast, { Toaster } from 'react-hot-toast';
 import { timeSince } from '../../util/timeSince';
-import { reportUser } from '../../util/reportUser';
+import { karmaManager } from '../../util/karmaManager';
+import { queries } from '../../util/queries';
+import { UserContext } from '../../lib/context';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -136,7 +138,7 @@ export default function Post({ post, comments, owner }) {
   const isMenuOpen = Boolean(anchorEl);
   const isAdminMenuOpen = Boolean(adminAnchorEl);
   const url = (post?.photoURL);
-  const admin = auth.currentUser.uid;
+  const { admin } = useContext(UserContext);
   
   const userRef = firestore.collection('users').doc(post.uid);
   const [user] = useDocumentData(userRef);
@@ -185,7 +187,7 @@ export default function Post({ post, comments, owner }) {
     e.preventDefault();
 
     // flagged post doc
-    const uid = auth.currentUser.uid;
+    const uid = admin.uid;
     const batch = firestore.batch();
     const flagRef = postRef.collection('flags').doc(auth.currentUser.uid);
 
@@ -210,7 +212,7 @@ export default function Post({ post, comments, owner }) {
       });
       // exit 
       setFlag(true);
-      reportUser(post.uid);
+      karmaManager(post.uid, -1);
     } else {
       await toast.error('Comment Already Reported!');
     }
@@ -293,13 +295,16 @@ export default function Post({ post, comments, owner }) {
     </Menu>
   );
 
+  const profileLink = queries({user: user?.username, id: user?.id}, 0);
+
   return (karmaCheck(post.karma) && !flag && (
     <React.Fragment>
       <Toaster />
       <Card className={classes.root}>
       <CardHeader
           avatar={
-            <Link href={`/users/${post.username}`}>
+            // <Link href={`/users/${post.username}`}>
+            <Link href={profileLink}>
               <a>
                 <PostPhotoManager post={post} />
               </a>
@@ -325,7 +330,7 @@ export default function Post({ post, comments, owner }) {
           </IconButton>
           )}
           title={
-            <Link href={`/users/${post.username}`}>
+            <Link href={profileLink}>
               <a className={classes.postTitle}>{user?.displayName || 'Anonymous User'} - Foster Parent since 2015</a>
             </Link>
           }

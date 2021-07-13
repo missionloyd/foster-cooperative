@@ -3,6 +3,7 @@ import { useDocument } from 'react-firebase-hooks/firestore';
 import { IconButton } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { useState } from 'react';
+import { karmaManager } from '../../util/karmaManager';
 
 // allows user to heart/like a post
 export default function Heart({ post, postRef }) {
@@ -21,6 +22,9 @@ export default function Heart({ post, postRef }) {
 
     await batch.commit();
     await setHeartCount(heartCount+1);
+
+    //update karma
+    await karmaManager(post.uid, 1);
   };
 
   // remove a user-to-post relationship
@@ -32,6 +36,9 @@ export default function Heart({ post, postRef }) {
 
     await batch.commit();
     await setHeartCount(heartCount-1);
+
+    //update karma
+    await karmaManager(post.uid, -1);
   }
 
 

@@ -19,10 +19,20 @@ import moment from 'moment';
 
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    //width: '58%',
+    width: '35rem',
+  },
   avatar: {
     height: 100,
     width: 100
+  },
+  button: {
+    background: 'white',
+    color: '#03b0b5',
+  },
+  spacer: {
+    margin: '0.4rem',
   }
 }));
 
@@ -52,26 +62,40 @@ export default function PublicUserProfile({ user }){
             className={classes.avatar}
             src={user?.photoURL || "/static/images/spock.gif"}
           />
+          <span className={classes.spacer}></span>
           <Typography
-            color="textPrimary"
-            gutterBottom
-            variant="h3"
+            color="primary"
+            //gutterBottom
+            variant="h4"
           >
             {user?.displayName || 'Anonymous User'}
           </Typography>
           <Typography
             color="textSecondary"
             variant="body1"
+            //gutterBottom
           >
-            Tempe, Arizona
+            {(user?.city && user?.state) && (
+              `${user?.city + `, ` + user?.state}`
+            )}
           </Typography>
           <Typography
-            className={classes.dateText}
             color="textSecondary"
+            //gutterBottom
             variant="body1"
           >
-            {/* {`${moment().format('hh:mm A')} ${user.timezone}`} */}
+            {user?.role || ''}
           </Typography>
+          {user?.bio && (
+            <Typography
+              className={classes.dateText}
+              color="textSecondary"
+              variant="body1"
+            >
+              {/* {`${moment().format('hh:mm A')} ${user.timezone}`} */}
+              {user?.bio || ''}
+            </Typography>
+          )}
         </Box>
       </CardContent>
       <Divider />

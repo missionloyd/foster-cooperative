@@ -78,9 +78,9 @@ export default function Auth() {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
-  const { data } = useSWR('/api/unsplash', fetcher);
-  const url = (data?.result.response.urls.regular || 'https://source.unsplash.com/random');
-
+  // const { data } = useSWR('/api/unsplash', fetcher);
+  // const url = (data?.result.response.urls.regular || 'https://source.unsplash.com/random');
+  const url = '';
   const [formState, inputHandler, setFormData] = useForm(
     {
       fname: {
