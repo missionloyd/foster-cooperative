@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import Router from "next/router";
 import clsx from 'clsx';
 import { alpha, makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -29,6 +30,8 @@ import Copyright from '../../components/shared/Copyright';
 import { UserContext } from '../../lib/context';
 import AuthCheck from '../../components/auth/AuthCheck';
 import { Avatar, Hidden } from '@material-ui/core';
+import LoadingSpinner from '../../components/shared/LoadingSpinner';
+import { auth } from '../../firebase/firebase';
 
 const drawerWidth = 240;
 
@@ -206,6 +209,11 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerColor: {
     background: '#515fa8'
+  },
+  spinner: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '2rem'
   }
 }));
 
@@ -248,9 +256,14 @@ export default function Dashboard({ children }) {
 
   const handleCloseMenuClick = (event) => {
     handleDrawerClose();
-  }
+  };
 
   //const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const logout = () => {
+    handleMenuClose();
+    auth.signOut();
+    Router.push("/auth");
+  };
 
   const menuId = 'menu';
   const renderMenu = (
@@ -273,9 +286,9 @@ export default function Dashboard({ children }) {
         <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       </Link>
 
-      <Link href='/auth' onClick={handleMenuClose} style={{textDecoration: 'none', color: 'black'}}>
-        <MenuItem onClick={handleMenuClose}>Log Out</MenuItem>
-      </Link>
+      {/* <Link href='/auth' onClick={handleMenuClose} style={{textDecoration: 'none', color: 'black'}}> */}
+        <MenuItem onClick={logout}>Log Out</MenuItem>
+      {/* </Link> */}
 
     </Menu>
   );
@@ -329,7 +342,6 @@ export default function Dashboard({ children }) {
   );
 
   return (
-    // <AuthCheck>
     <div className={classes.root}>
       <CssBaseline />
       <AppBar position="absolute" className={clsx(classes.appBar, !mobile || (open && classes.appBarShift))}>
@@ -478,13 +490,20 @@ export default function Dashboard({ children }) {
         <div className={classes.appBarSpacer} />
         <Container maxWidth={false} className={classes.container}>
           {/* Where the pages are being routed to */}
-          {children}
+          <AuthCheck 
+            fallback={
+              <div className={classes.spinner}>
+                <LoadingSpinner show={true}></LoadingSpinner>
+              </div>
+            }
+          >
+            {children}
+          </AuthCheck>
           <Box pt={5}>
             <Copyright />
           </Box>
         </Container>
       </main>
     </div>
-    // </AuthCheck> 
   );
 }

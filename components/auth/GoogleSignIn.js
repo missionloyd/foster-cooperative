@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
-import { auth, firestore, googleAuthProvider } from '../../firebase/firebase';
+import { auth, firestore, googleAuthProvider, serverTimestamp } from '../../firebase/firebase';
 import { useRouter } from 'next/router';
 import { UserContext } from '../../lib/context';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { userNameGenerator } from '../../util/userNameGenerator';
 import { useHttpClient } from '../../lib/hooks/http-hook';
-import randomize from 'randomatic';
 import { queries } from '../../util/queries';
+import randomize from 'randomatic';
 
 const useStyles = makeStyles((theme) => ({
   btnGoogle: {
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 // Sign in with Google button
 export default function SignInButton({text}) {
 
-  const { user, username } = useContext(UserContext);
+  const { user, id } = useContext(UserContext);
   const { sendRequest } = useHttpClient();
   const classes = useStyles();
   const router = useRouter();
@@ -29,26 +29,28 @@ export default function SignInButton({text}) {
     await auth.signInWithPopup(googleAuthProvider);
 
     // Create refs for both documents
-    const userDoc = firestore.doc(`users/${user.uid}`);
-    const usernameDoc = firestore.doc(`usernames/${userNameGenerator(user.displayName)}`);
+    const userDoc = firestore.doc(`users/${await user?.uid}`);
+    const userName = userNameGenerator(await user?.displayName);
+    const usernameDoc = firestore.doc(`usernames/${userName}`);
     //const emailDoc = firestore.doc(`emails/${user.email}`); 
-    const userName = userNameGenerator(user.displayName);
-    const id = randomize('0', 4);
+
     // Commit both docs together as a batch write.
     const batch = firestore.batch();
     batch.set(userDoc, { 
       username: userName,
-      displayName: user.displayName, 
-      email: user.email, 
-      photoURL: user.photoURL, 
-      uid: user.uid,
-      id: id,
+      displayName: await user?.displayName, 
+      email: await user?.email, 
+      photoURL: await user?.photoURL, 
+      uid: await user?.uid,
+      id: id || randomize('0', 4),
+      connections: 0,
       karma: 0,
       role: '',
       communities: [],
       bio: '',
       city: '',
-      state: ''
+      state: '',
+      //lastSeen: serverTimestamp()
     });
 
     batch.set(usernameDoc, { uid: user.uid });

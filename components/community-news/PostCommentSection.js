@@ -111,13 +111,12 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
     e.preventDefault();
     let data = null;
 
-    // create new field of type string array
+    // create new fields
     data = {
       comment: comment,
       uid: auth.currentUser.uid,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
-      //snapshots: [(await firebase.firestore.Timestamp.fromDate(new Date()).toDate().toString())],
       key: commentUid,
       karma: 0,
       slug: post.slug

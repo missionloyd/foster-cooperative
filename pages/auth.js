@@ -151,7 +151,7 @@ export default function Auth() {
           }
         );
         defaultAuth.login(responseData.userId, responseData.token);
-        Router.push('/');
+        await Router.push('/');
       } catch (err) {}
     } 
     else {
@@ -166,7 +166,7 @@ export default function Auth() {
           formData
         );
         defaultAuth.login(responseData.userId, responseData.token);
-        Router.push('/nextsteps');
+        await Router.push('/nextsteps');
       } catch (err) {}
     }
   }

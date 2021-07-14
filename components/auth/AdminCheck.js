@@ -6,5 +6,5 @@ import { UserContext } from '../../lib/context';
 export default function AdminCheck(props) {
   const { user } = useContext(UserContext);
 
-  return (user?.uid === props?.user.uid) ? props.children : props.fallback || <Link href="/auth">This is not your profile...</Link>;
+  return (user?.uid === props?.user.uid) ? props.children : props.fallback || <Link href="/auth">You don't have access to this page!</Link>;
 }

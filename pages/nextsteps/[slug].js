@@ -243,7 +243,7 @@ export default function NextSteps({ user }) {
     const batch = firestore.batch();
 
     batch.update(userRef, {
-      role: role,
+      role: role !== 'Other...' ? role : customRole,
       city: city,
       state: state,
       photoURL: photoUrl

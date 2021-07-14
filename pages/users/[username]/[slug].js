@@ -5,6 +5,7 @@ import { firestore, getUserWithUsername, postToJSON } from '../../../firebase/fi
 import Link from 'next/link';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { useContext } from 'react';
+import AuthCheck from '../../../components/auth/AuthCheck.js';
 
 export async function getStaticProps({ params }) {
   const { username, slug } = params;
@@ -56,9 +57,9 @@ export default function UserProfilePage(props) {
   const { user: currentUser } = useContext(UserContext);
 
   return (
-    <main>
+    <AuthCheck>
       <PublicUserProfilePage user={user} />
       <PostFeed posts={posts} />
-    </main>
+    </AuthCheck>
   );
 }
