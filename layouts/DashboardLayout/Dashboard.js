@@ -219,7 +219,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard({ children }) {
   const classes = useStyles();
-  const { user } = useContext(UserContext);
+  const { user, photoURL } = useContext(UserContext);
   const drawerRef = React.useRef();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -333,7 +333,9 @@ export default function Dashboard({ children }) {
             color="inherit"
           >
             {/* <AccountCircle /> */}
-            <Avatar className={classes.small} src={user?.photoURL || '/static/images/avatar_6.png'}/>
+            {photoURL ? (
+              <Avatar className={classes.small} src={photoURL}/>
+            ) : <LoadingSpinner show={true}></LoadingSpinner>}
           </IconButton>
           <p>Profile</p>
         </MenuItem>
@@ -409,7 +411,9 @@ export default function Dashboard({ children }) {
               color="inherit"
             >
               {/* <AccountCircle /> */}
-              <Avatar className={classes.small} src={user?.photoURL || '/static/images/avatar_6.png'}/>
+              {photoURL ? (
+                <Avatar className={classes.small} src={photoURL}/>
+              ) : <LoadingSpinner show={true}></LoadingSpinner>}
             </IconButton>
           </div>
           </div>

@@ -1,6 +1,6 @@
-import { firestore, auth, getUserWithUid, increment } from '../firebase/firebase';
+import { firestore, increment } from '../firebase/firebase';
   
-export async function karmaManager(uid, option) {
+export const karmaManager = async (uid, option) => {
   const userRef = firestore.collection('users').doc(uid);
   const batch = firestore.batch();
 

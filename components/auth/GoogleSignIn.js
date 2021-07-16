@@ -19,59 +19,53 @@ const useStyles = makeStyles((theme) => ({
 // Sign in with Google button
 export default function SignInButton({text}) {
 
-  const { user, id } = useContext(UserContext);
   const { sendRequest } = useHttpClient();
   const classes = useStyles();
   const router = useRouter();
+  const { user, username, photoURL, connections, karma } = useContext(UserContext);
 
   const signInwithGoogle = async (e) => {
     e.preventDefault();
-    await auth.signInWithPopup(googleAuthProvider);
+    await auth.signInWithPopup(googleAuthProvider).then(async () => {
+      // Create refs for both documents
+      const userDoc = firestore.doc(`users/${auth?.currentUser.uid}`);
+      //const userName = userNameGenerator(auth?.currentUser.displayName);
+      // const usernameDoc = firestore.doc(`usernames/${userName}`);
+      //const emailDoc = firestore.doc(`emails/${user.email}`); 
 
-    // Create refs for both documents
-    const userDoc = firestore.doc(`users/${await user?.uid}`);
-    const userName = userNameGenerator(await user?.displayName);
-    const usernameDoc = firestore.doc(`usernames/${userName}`);
-    //const emailDoc = firestore.doc(`emails/${user.email}`); 
+      // Commit both docs together as a batch write.
+      if(!userDoc) {
+        const batch = firestore.batch();
+        batch.set(userDoc, { 
+          displayName: auth?.currentUser.displayName, 
+          email: auth?.currentUser.email, 
+          uid: auth?.currentUser.uid,
+          //lastSeen: serverTimestamp()
+        });
+  
+        await batch.commit();
+      }
 
-    // Commit both docs together as a batch write.
-    const batch = firestore.batch();
-    batch.set(userDoc, { 
-      username: userName,
-      displayName: await user?.displayName, 
-      email: await user?.email, 
-      photoURL: await user?.photoURL, 
-      uid: await user?.uid,
-      id: id || randomize('0', 4),
-      connections: 0,
-      karma: 0,
-      role: '',
-      communities: [],
-      bio: '',
-      city: '',
-      state: '',
-      //lastSeen: serverTimestamp()
-    });
+      // translate values into mongo
+      try {
+        const formData = new FormData();
+        formData.append('email', user.email);
+        formData.append('name', user.displayName);
+        formData.append('password', 'super_secret_dont_share');
+        const responseData = await sendRequest(
+          'http://localhost:5000/api/users/signup',
+          'POST',
+          formData
+        );
+      } catch (err) {console.log(err)}
 
-    batch.set(usernameDoc, { uid: user.uid });
+      if(userDoc) {
+        await router.push('/home');
+      } else {
+        await router.push('/nextsteps');
+      }
 
-    await batch.commit();
-
-    // translate values into mongo
-    try {
-      const formData = new FormData();
-      formData.append('email', user.email);
-      formData.append('name', user.displayName);
-      formData.append('password', 'super_secret_dont_share');
-      const responseData = await sendRequest(
-        'http://localhost:5000/api/users/signup',
-        'POST',
-        formData
-      );
-    } catch (err) {console.log(err)}
-    const queryLink = queries({user: userName, id: id}, 1);
-    //console.log(queryLink);
-    await router.push(queryLink);
+});
   };  
 
   return (

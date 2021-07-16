@@ -25,6 +25,7 @@
     "firebase-admin": "^9.6.0",
     "jdenticon": "^3.1.0",
     "leaflet": "^1.7.1",
+    "lodash.debounce": "^4.0.8",
     "lodash.kebabcase": "^4.1.1",
     "markdown-to-jsx": "^7.1.2",
     "moment": "^2.29.1",

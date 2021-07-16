@@ -129,6 +129,7 @@ function PostCommentManager({ post, postRef, comments, onCommentUpdate, commentC
 export default function Post({ post, comments, owner }) {
   const classes = useStyles();
   const router = useRouter();
+  const { uid } = useContext(UserContext);
   const postRef = firestore.collection('users').doc(post?.uid).collection('posts').doc(post?.slug);
   const [flag, setFlag] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -138,7 +139,6 @@ export default function Post({ post, comments, owner }) {
   const isMenuOpen = Boolean(anchorEl);
   const isAdminMenuOpen = Boolean(adminAnchorEl);
   const url = (post?.photoURL);
-  const { admin } = useContext(UserContext);
   
   const userRef = firestore.collection('users').doc(post.uid);
   const [user] = useDocumentData(userRef);
@@ -295,7 +295,7 @@ export default function Post({ post, comments, owner }) {
     </Menu>
   );
 
-  const profileLink = queries({user: user?.username, id: user?.id}, 0);
+  //const profileLink = queries({user: user?.username, id: user?.id}, 0);
 
   return (karmaCheck(post.karma) && !flag && (
     <React.Fragment>
@@ -303,14 +303,13 @@ export default function Post({ post, comments, owner }) {
       <Card className={classes.root}>
       <CardHeader
           avatar={
-            // <Link href={`/users/${post.username}`}>
-            <Link href={profileLink}>
+            <Link href={`/users/${post.username}`}>
               <a>
                 <PostPhotoManager post={post} />
               </a>
             </Link>
           }
-          action={admin === owner && (
+          action={uid === owner && (
           <IconButton 
             aria-label="options"
             aria-controls={adminMenuId}
@@ -330,8 +329,8 @@ export default function Post({ post, comments, owner }) {
           </IconButton>
           )}
           title={
-            <Link href={profileLink}>
-              <a className={classes.postTitle}>{user?.displayName || 'Anonymous User'} - Foster Parent since 2015</a>
+            <Link href={`/users/${post.username}`}>
+              <a className={classes.postTitle}>{user?.displayName || 'Anonymous User'} - {user?.role || 'Unknown Role'}</a>
             </Link>
           }
           subheader={dateCheck()}

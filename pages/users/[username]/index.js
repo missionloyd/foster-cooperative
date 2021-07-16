@@ -1,6 +1,6 @@
 import PublicUserProfile from '../../../components/user/profile/PublicUserProfile';
 import PostFeed from '../../../components/community-news/PostFeed';
-import { firestore, getUserWithUsernameID, postToJSON } from '../../../firebase/firebase';
+import { firestore, getUserWithUsername, postToJSON } from '../../../firebase/firebase';
 import Dashboard from '../../../layouts/DashboardLayout/Dashboard';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container } from '@material-ui/core';
@@ -25,10 +25,9 @@ const useStyles = makeStyles((theme) => ({
 
 
 export async function getServerSideProps({ query }) {
-  const username = query.user;
-  const id  = query.id;
+  const { username } = query;
 
-  const userDoc = await getUserWithUsernameID(username, id);
+  const userDoc = await getUserWithUsername(username);
 
   // If no user, short circuit to 404 page
   if (!userDoc) {
