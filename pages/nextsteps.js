@@ -135,7 +135,7 @@ export default function NextSteps(props) {
 
   // background image
   const { backgroundData } = useSWR('/api/unsplash', fetcher);
-  const url = (data?.result.response.urls.regular || '');
+  const backgroundUrl = (backgroundData?.result.response.urls.regular || '');
   // const backgroundUrl = (backgroundData?.result.response.urls.regular || 'https://source.unsplash.com/random');
   // const backgroundUrl = '';
 
