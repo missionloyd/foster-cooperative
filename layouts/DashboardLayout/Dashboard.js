@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Router from "next/router";
 import clsx from 'clsx';
 import { alpha, makeStyles } from '@material-ui/core/styles';
@@ -133,7 +133,7 @@ const useStyles = makeStyles((theme) => ({
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
-    flexGrow: 1,
+    //flexGrow: 1,
     height: '100vh',
     overflow: 'auto',
   },
@@ -264,6 +264,11 @@ export default function Dashboard({ children }) {
     auth.signOut();
     Router.push("/auth");
   };
+
+  // useEffect(() => {
+  //   //window[`scrollTo`]({ top: 0, behavior: `smooth`});
+  //   window.scrollTo(0,0);
+  // }, []);
 
   const menuId = 'menu';
   const renderMenu = (

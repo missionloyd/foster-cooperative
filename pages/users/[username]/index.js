@@ -3,7 +3,7 @@ import PostFeed from '../../../components/community-news/PostFeed';
 import { firestore, getUserWithUsername, postToJSON } from '../../../firebase/firebase';
 import Dashboard from '../../../layouts/DashboardLayout/Dashboard';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container } from '@material-ui/core';
+import { Container, Grid } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   profileContainer: {
@@ -19,7 +19,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignContent: 'center',
+    width: '35rem',
   }
 }));
 
@@ -75,9 +76,11 @@ function PublicUserProfilePage({ user, posts, comments }) {
           <PublicUserProfile user={user} />
         </div>
       </Container>
-      <div className={classes.feedContainer}>      
-        <PostFeed posts={posts} comments={comments} />
-      </div>
+      <Grid container justify="center">
+        <div className={classes.feedContainer}>      
+          <PostFeed posts={posts} comments={comments} />
+        </div>
+      </Grid>
     </main>
   )
 }

@@ -32,11 +32,13 @@ import { timeSince } from '../../util/timeSince';
 import { karmaManager } from '../../util/karmaManager';
 import { queries } from '../../util/queries';
 import { UserContext } from '../../lib/context';
+import { Box } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '35rem',
-    marginBottom: '2rem'
+    marginBottom: '2rem',
+    maxWidth: '35rem',
+    //display: 'inline-block'
   },
   media: {
     height: 0,
@@ -72,6 +74,9 @@ const useStyles = makeStyles((theme) => ({
   color: {
     primary: theme.primary,
     warn: theme.error
+  },
+  grid: {
+
   }
 }));
 

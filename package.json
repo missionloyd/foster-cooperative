@@ -23,6 +23,7 @@
     "express-validator": "^6.10.0",
     "firebase": "^8.3.2",
     "firebase-admin": "^9.6.0",
+    "framer-motion": "^4.1.17",
     "jdenticon": "^3.1.0",
     "leaflet": "^1.7.1",
     "lodash.debounce": "^4.0.8",

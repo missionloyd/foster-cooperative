@@ -11,7 +11,8 @@ import {
   Container,
   makeStyles,
   Grid,
-  Button
+  Button,
+  Hidden
 } from '@material-ui/core';
 import AuthCheck from '../../../components/auth/AuthCheck';
 
@@ -19,7 +20,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
     height: '100%',
-    paddingTop: theme.spacing(2)
+    width: '100vw',
+    maxWidth: '100%',
+    paddingTop: theme.spacing(1)
   },
   headerContainer: {
     display: 'flex',
@@ -27,14 +30,15 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   feed: {
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
-    alignItems: 'center',
-    //maxWidth: '90%'
+    alignContent: 'center',
+    width: '35rem',
   },
   helpers: {
     display: 'flex',
@@ -112,24 +116,28 @@ function Feed(props) {
       className={classes.root}
       title="Community News"
     >
-      <Box
+      {/* <Box
         display="flex"
         flexDirection="column"
         height="100%"
         justifyContent="center"
-      >
+      > */}
         <AuthCheck>
         <Container maxWidth='xl'>
           <div className={classes.container}>
             <h1>Community News 👋</h1>
             <div className={classes.headerContainer}>
-              <h1>New Post</h1>
+              <Hidden xsDown implementation="css">
+                <h1>New Post</h1>
+              </Hidden>
               <CreateNewPost />
             </div>
           </div>
-          <div className={classes.feed}>
-            <PostFeed posts={posts} comments={comments} />
-          </div>
+          <Grid container justifyContent="center">
+            <div className={classes.feed}>
+              <PostFeed posts={posts} comments={comments} />
+            </div>
+          </Grid>
           <div className={classes.helpers}>
             {!loading && !postsEnd && 
               <Button onClick={getMorePosts} variant="contained" className={classes.button}>Load more</Button>
@@ -139,7 +147,7 @@ function Feed(props) {
           </div>
         </Container>
         </AuthCheck>
-      </Box>
+      {/* </Box> */}
     </Page>
   );
 }

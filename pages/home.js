@@ -97,7 +97,9 @@ const Home = (props) => {
 
   const { data } = useSWR('/api/unsplash', fetcher);
 
-  const url = (data?.result.response.urls.regular || 'https://source.unsplash.com/random');
+  // const url = (data?.result.response.urls.regular || 'https://source.unsplash.com/random');
+  // const url = (data?.result.response.urls.regular || '');
+  const url = 'https://source.unsplash.com/random';
 
   return (
     <Page
@@ -106,6 +108,7 @@ const Home = (props) => {
       <CssBaseline />
       <Container maxWidth="xl">
         <main>
+          <section id="page-transition"></section>
           <MainFeaturedPost post={mainFeaturedPost} url={url} />
           <Grid container spacing={4}>
             {featuredPosts.map((post) => (
