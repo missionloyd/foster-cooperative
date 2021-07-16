@@ -1,12 +1,19 @@
 import React from "react";
 import Router from "next/router";
-import AuthCheck from "../components/auth/AuthCheck";
+import { useContext } from 'react';
+// import AuthCheck from "../components/auth/AuthCheck";
+import { UserContext } from '../lib/context';
 
 export default function Index() {
+  const { user } = useContext(UserContext);
   React.useEffect(() => {
     const { pathname } = Router
     if(pathname == '/') {
-      Router.push("/home")
+      if(user) {
+        Router.push("/home");
+      } else {
+        Router.push("/auth");
+      }
     }
   })
   return (

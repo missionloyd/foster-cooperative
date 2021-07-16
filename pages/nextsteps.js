@@ -134,9 +134,10 @@ export default function NextSteps(props) {
   const [photoUrl, setPhotoUrl] = useState('');
 
   // background image
-  // const { backgroundData } = useSWR('/api/unsplash', fetcher);
+  const { backgroundData } = useSWR('/api/unsplash', fetcher);
+  const url = (data?.result.response.urls.regular || '');
   // const backgroundUrl = (backgroundData?.result.response.urls.regular || 'https://source.unsplash.com/random');
-  const backgroundUrl = '';
+  // const backgroundUrl = '';
 
   const authSubmitHandler = async (e) => {     
     e.preventDefault();
