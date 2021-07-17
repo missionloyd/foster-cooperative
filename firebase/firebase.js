@@ -73,11 +73,17 @@ export async function getUserWithUsername(username) {
  */
 export function postToJSON(doc) {
   const data = doc.data();
-  console.log(data)
-  return {
-    ...data,
-    // Gotcha! firestore timestamp NOT serializable to JSON. Must convert to milliseconds
-    createdAt: data?.createdAt.toMillis() || 0,
-    updatedAt: data?.updatedAt.toMillis() || 0,
-  };
+  console.log(data);
+  if(data?.createdAt && data?.updatedAt) {
+    return {
+      ...data,
+      // Gotcha! firestore timestamp NOT serializable to JSON. Must convert to milliseconds
+      createdAt: data?.createdAt.toMillis() || 0,
+      updatedAt: data?.updatedAt.toMillis() || 0,
+    };
+  } else {
+    return {
+      ...data
+    }
+  }
 }

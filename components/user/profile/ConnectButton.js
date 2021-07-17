@@ -1,11 +1,23 @@
 import React, { useState, useContext } from 'react';
 import { firestore, auth, increment, serverTimestamp } from '../../../firebase/firebase';
-import { Button } from '@material-ui/core';
+import { Button, makeStyles } from '@material-ui/core';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import toast, { Toaster } from 'react-hot-toast';
 
+const useStyles = makeStyles((theme) => ({
+  button: {
+    backgroundColor: '#03b0b5',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#fff',
+      color: '#03b0b5',
+    }
+  }
+}));
+
 // allows users to be "friends" on platform
 export default function ConnectButton({ user }) {
+  const classes = useStyles();
   const currentUserUid = auth?.currentUser.uid;
   const userUid = user?.uid;
   const currentUserRef = firestore.collection('users').doc(currentUserUid);
@@ -65,6 +77,7 @@ export default function ConnectButton({ user }) {
           fullWidth
           variant="text"
           onClick={e => removeConnection(e)}
+          className={classes.button}
         >
           Remove Connection
         </Button>
@@ -74,6 +87,7 @@ export default function ConnectButton({ user }) {
           fullWidth
           variant="text"
           onClick={e => acceptRequest(e)}
+          className={classes.button}
         >
           Accept Connection
         </Button>
@@ -84,6 +98,7 @@ export default function ConnectButton({ user }) {
         variant="text"
         disabled={userDoc?.exists}
         onClick={e => sendRequest(e)}
+        className={classes.button}
       >
         {!userDoc?.exists && `Connect` || `Request Sent`}
       </Button>

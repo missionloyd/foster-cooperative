@@ -1,9 +1,10 @@
-import PublicUserProfile from '../../../components/user/profile/PublicUserProfile';
-import PostFeed from '../../../components/community-news/PostFeed';
-import { firestore, getUserWithUsername, postToJSON } from '../../../firebase/firebase';
-import Dashboard from '../../../layouts/DashboardLayout/Dashboard';
+import PublicUserProfile from '../../components/user/profile/PublicUserProfile';
+import PostFeed from '../../components/community-news/PostFeed';
+import { firestore, getUserWithUsername, postToJSON } from '../../firebase/firebase';
+import Dashboard from '../../layouts/DashboardLayout/Dashboard';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Grid } from '@material-ui/core';
+import Page from '../../components/shared/Page';
 
 const useStyles = makeStyles((theme) => ({
   profileContainer: {
@@ -19,11 +20,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
-    alignContent: 'center',
-    width: '35rem',
+    alignItems: 'center',
+    width: '100vw',
   }
 }));
-
 
 export async function getServerSideProps({ query }) {
   const { username } = query;
@@ -70,18 +70,20 @@ export async function getServerSideProps({ query }) {
 function PublicUserProfilePage({ user, posts, comments }) {
   const classes = useStyles();
   return (
-    <main>
+    <Page
+      title={user?.displayName || 'User'}
+    >
       <Container>
         <div className={classes.profileContainer}>
           <PublicUserProfile user={user} />
         </div>
       </Container>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <div className={classes.feedContainer}>      
           <PostFeed posts={posts} comments={comments} />
         </div>
       </Grid>
-    </main>
+    </Page>
   )
 }
 

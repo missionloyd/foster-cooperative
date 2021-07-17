@@ -13,16 +13,15 @@ import {
   Divider,
   Typography,
 } from '@material-ui/core';
-//import PropTypes from 'prop-types';
-//import clsx from 'clsx';
 import moment from 'moment';
 import ConnectButton from './ConnectButton';
 import { auth } from '../../../firebase/firebase';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    //width: '58%',
-    width: '35rem',
+    // width: '100%',
+    maxWidth: 350,
+    //width: '35rem',
   },
   avatar: {
     height: 100,
@@ -99,14 +98,21 @@ export default function PublicUserProfile({ user }){
           )}
         </Box>
       </CardContent>
+      <Divider />
+      <CardActions>
       {auth?.currentUser.uid !== user?.uid && (
-        <>
-          <Divider />
-          <CardActions>
-            <ConnectButton user={user}/>
-          </CardActions>
-        </>
-      )}
+        <ConnectButton user={user}/>
+      ) ||
+        <Button
+          color="primary"
+          fullWidth
+          variant="text"
+          disabled={true}
+        >
+          Your Profile
+        </Button>
+      }
+      </CardActions>
     </Card>
   );
 };

@@ -24,7 +24,6 @@ import Divider from '@material-ui/core/Divider';
 import Loader from '../shared/LoadingSpinner';
 import randomize from 'randomatic';
 import { karmaManager } from '../../util/karmaManager';
-import { queries } from '../../util/queries';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -257,7 +256,7 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
         return c.user.username;
       }
     }).join('');
-    router.push(`/users/${userName}`);
+    router.push(`/${userName}`);
   };
 
   const menuId = 'menu';
@@ -379,7 +378,7 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
               <CardContent>
                 <div className={classes.commentCard}>
                   <div className={classes.commentContent}>
-                    <Link href={queries({user: c.user?.username, id: c.user?.id}, 0)} >
+                    <Link href={`/${c.user?.username}`} >
                       <Avatar 
                         className={classes.avatar} 
                         src={c.user?.photoURL || '/static/images/avatar_6.png'}
@@ -387,7 +386,7 @@ export default function PostCommentSection({ post, postRef, comments, onCommentU
                     </Link>
                     <div>
                       <div className={classes.titleContainer}>
-                        <Link href={queries({user: c.user?.username, id: c.user?.id}, 0)}>
+                        <Link href={`/${c.user?.username}`}>
                           <Typography
                             variant="body2"
                             gutterBottom

@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     marginBottom: '2rem',
     maxWidth: '35rem',
+    width: '100%'
     //display: 'inline-block'
   },
   media: {
@@ -239,7 +240,7 @@ export default function Post({ post, comments, owner }) {
 
   const connect = (e) => {
     e.preventDefault();
-    router.push(`/users/${post.userName}`);
+    router.push(`/${post.userName}`);
   };
 
   const menuId = 'menu';
@@ -308,7 +309,7 @@ export default function Post({ post, comments, owner }) {
       <Card className={classes.root}>
       <CardHeader
           avatar={
-            <Link href={`/users/${post.username}`}>
+            <Link href={`/${post.username}`}>
               <a>
                 <PostPhotoManager post={post} />
               </a>
@@ -334,7 +335,7 @@ export default function Post({ post, comments, owner }) {
           </IconButton>
           )}
           title={
-            <Link href={`/users/${post.username}`}>
+            <Link href={`/${post.username}`}>
               <a className={classes.postTitle}>{user?.displayName || 'Anonymous User'} - {user?.role || 'Unknown Role'}</a>
             </Link>
           }

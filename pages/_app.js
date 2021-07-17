@@ -11,9 +11,6 @@ import * as gtag from '../lib/gtag';
 import { UserContext } from '../lib/context';
 import PageChange from "../components/shared/PageChange.js";
 import { useUserData } from '../lib/hooks/auth-hook';
-//import handExitComplete from '../util/handExitComplete';
-import useRouterScroll from '../util/ScrollToTop';
-import { AnimatePresence } from 'framer-motion';
 
 Router.events.on("routeChangeStart", (url) => {
   //document.body.classList.add("body-page-transition");
@@ -33,40 +30,23 @@ Router.events.on("routeChangeError", () => {
 });
 
 export default function MyApp(props){
-  //useRouterScroll();
   const { Component, pageProps } = props;
   const Layout = Component.layout || (({children}) => <>{children}</>);
   const userData = useUserData();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   Router.events.on('routeChangeComplete', () => {
-  //     window.scroll({
-  //       top: 1,
-  //       // left: 0,
-  //       // behavior: 'smooth'
-  //     });
-  //     console.log('test')
-  //   });
-  // }, []);
-  
-  const handExitComplete = () => {
-    // Get the hash from the url
-    const hashId = 'page-transition';
-    if (hashId) {
-      // Use the hash to find the first element with that id
-      const element = document.querySelector(hashId);
-      console.log(element);
-      if (element) {
-        // Smooth scroll to that elment
-        element.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-          inline: 'nearest',
-        });
-      }
+  // scroll to top when route changes
+  useEffect(() => {
+    const hashId = 'anchor';
+    const element = document.getElementById(hashId);
+    if (element) {
+      element.scrollIntoView({
+        block: 'end',
+        inline: 'nearest',
+        // behavior: 'smooth',
+      });
     }
-};
+  }, [router.route]);
 
   return (
     <React.Fragment>
@@ -78,11 +58,9 @@ export default function MyApp(props){
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <UserContext.Provider value={ userData }>
-        <AnimatePresence exitBeforeEnter onExitComplete={handExitComplete}>
           <Layout>
-            <Component {...pageProps} key={'page-transition'}/>
+            <Component {...pageProps} />
           </Layout>
-        </AnimatePresence> 
         </UserContext.Provider>
       </ThemeProvider>
     </React.Fragment>

@@ -20,8 +20,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
     height: '100%',
-    width: '100vw',
-    maxWidth: '100%',
     paddingTop: theme.spacing(1)
   },
   headerContainer: {
@@ -37,8 +35,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
-    alignContent: 'center',
-    width: '35rem',
+    alignItems: 'center',
+    width: '100vw',
   },
   helpers: {
     display: 'flex',
@@ -46,10 +44,14 @@ const useStyles = makeStyles((theme) => ({
     width: '100%'
   },
   button: {
-    background: '#03b0b5',
     width: '10rem',
-    color: 'white',
-  }
+    backgroundColor: '#03b0b5',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#fff',
+      color: '#03b0b5',
+    },
+  },
 }));
 
 // Max post to query per page

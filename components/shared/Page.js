@@ -1,7 +1,6 @@
 import React, { forwardRef } from 'react';
 import Head from 'next/head'
 import PropTypes from 'prop-types';
-import { motion } from "framer-motion";
 
 const Page = forwardRef(({
   children,
@@ -10,11 +9,7 @@ const Page = forwardRef(({
   ...rest
 }, ref) => {
   return (
-    <motion.div
-      exit={{ opacity: 0 }}
-      initial="initial"
-      animate="animate"
-      className={`app-container ${className}`}
+    <div
       ref={ref}
       {...rest}
     >
@@ -23,8 +18,11 @@ const Page = forwardRef(({
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <main>{children}</main>
-    </motion.div>
+      <main>
+      <section id="anchor"></section>
+        {children}
+      </main>
+    </div>
   );
 });
 
